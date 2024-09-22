@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="update ml-auto mr-auto">
+        <button (click)="showAddClass = !showAddClass" type="submit" class="btn btn-primary btn-round">Add
+            Class</button>
+    </div>
+</div>
+
+<app-add-class *ngIf="showAddClass"></app-add-class>
+
+<app-view-class></app-view-class>
