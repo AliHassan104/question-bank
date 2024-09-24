@@ -9,6 +9,9 @@ import { MapsComponent } from '../../pages/maps/maps.component';
 import { NotificationsComponent } from '../../pages/notifications/notifications.component';
 import { UpgradeComponent } from '../../pages/upgrade/upgrade.component';
 import { ClassesComponent } from 'app/pages/classes/classes.component';
+import { SubjectComponent } from 'app/pages/subject/subject.component';
+import { ChapterComponent } from 'app/pages/chapter/chapter.component';
+import { QuestionComponent } from 'app/pages/question/question.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
@@ -23,8 +26,8 @@ export const AdminLayoutRoutes: Routes = [
     // 
 
     { path: 'class',        component: ClassesComponent },
-    { path: 'subject',        component: UpgradeComponent },
-    { path: 'chapter',        component: UpgradeComponent },
-    { path: 'question',        component: UpgradeComponent },
+    { path: 'subject',        component: SubjectComponent },
+    { path: 'chapter',        component: ChapterComponent },
+    { path: 'question',        component: QuestionComponent },
 
 ];

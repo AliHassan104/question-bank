@@ -24,6 +24,7 @@ import { ViewChapterComponent } from './pages/chapter/view-chapter/view-chapter.
 import { QuestionComponent } from './pages/question/question.component';
 import { ViewQuestionComponent } from './pages/question/view-question/view-question.component';
 import { AddQuestionComponent } from './pages/question/add-question/add-question.component';
+import { ReactiveFormsModule } from "@angular/forms";
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { AddQuestionComponent } from './pages/question/add-question/add-question
   ],
   imports: [
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes,{
       useHash: true
     }),

@@ -1,1 +1,11 @@
-<p>question works!</p>
+<div class="row">
+    <div class="update ml-auto mr-auto">
+        <button (click)="showAddQuestion = !showAddQuestion" type="submit" class="btn btn-primary btn-round">Add
+            Questions</button>
+    </div>
+</div>
+
+
+<app-add-question *ngIf="showAddQuestion"></app-add-question>
+
+<app-view-question></app-view-question>
