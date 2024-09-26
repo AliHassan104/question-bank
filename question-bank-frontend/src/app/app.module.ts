@@ -25,6 +25,7 @@ import { QuestionComponent } from './pages/question/question.component';
 import { ViewQuestionComponent } from './pages/question/view-question/view-question.component';
 import { AddQuestionComponent } from './pages/question/add-question/add-question.component';
 import { ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -54,7 +55,9 @@ import { ReactiveFormsModule } from "@angular/forms";
     NavbarModule,
     ToastrModule.forRoot(),
     FooterModule,
-    FixedPluginModule
+    FixedPluginModule,
+    HttpClientModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

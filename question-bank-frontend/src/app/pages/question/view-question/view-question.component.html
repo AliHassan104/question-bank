@@ -7,43 +7,32 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
-                        <thead class=" text-primary">
-                            <th>
-                                Question
-                            </th>
-                            <th>
-                                Class
-                            </th>
-                            <th>
-                                Section
-                            </th>
-                            <th>
-                                Chapter
-                            </th>
-                            <th class="text-right">
-                                Action
-                            </th>
+                        <thead class="text-primary">
+                            <tr>
+                                <th>S. No</th>
+                                <th>Question</th>
+                                <th>Class</th>
+                                <th>Section</th>
+                                <th>Chapter</th>
+                                <th class="text-right">Action</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    IDE
-                                </td>
-                                <td>
-                                    X
-                                </td>
-                                <td>
-                                    MCQs
-                                </td>
-                                <td>
-                                    Chapter 1
-                                </td>
+                            <tr *ngFor="let question of questions; let i = index">
+                                <td>{{ i + 1 }}</td> <!-- Serial number -->
+                                <td>{{ question.text }}</td> <!-- Question text -->
+                                <td>{{ question.class }}</td> <!-- Class -->
+                                <td>{{ question.section }}</td> <!-- Section -->
+                                <td>{{ question.chapter }}</td> <!-- Chapter -->
                                 <td class="text-right">
-                                    edit delte
+                                    <button (click)="editQuestion(question)" class="btn btn-primary btn-round">
+                                        Edit
+                                    </button>
+                                    <button (click)="deleteQuestion(question)" class="btn btn-danger btn-round">
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
-
-
                         </tbody>
                     </table>
                 </div>

@@ -9,6 +9,9 @@
                     <table class="table">
                         <thead class=" text-primary">
                             <th>
+                                S.No
+                            </th>
+                            <th>
                                 Name
                             </th>
                             <th class="text-right">
@@ -16,15 +19,28 @@
                             </th>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr *ngFor="let class of classes; let i = index">
                                 <td>
-                                    IX
+                                    {{ i + 1 }} <!-- Serial number (S. No) -->
+                                </td>
+                                <td>
+                                    {{ class.name }}
                                 </td>
                                 <td class="text-right">
-                                    Edit delte
+                                    <div class="">
+                                        <div class="update ml-auto mr-auto">
+                                            <button (click)="editClass(class)" class="btn btn-primary btn-round">
+                                                Edit
+                                            </button>
+                                            <button (click)="deleteClass(class)" class="btn btn-danger btn-round">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
+
                     </table>
                 </div>
             </div>
