@@ -11,19 +11,18 @@
                             <tr>
                                 <th>S. No</th>
                                 <th>Name</th>
-                                <th>Country</th>
-                                <th>City</th>
-                                <th class="text-right">Salary</th>
+                                <th>Subject</th>
+                                <th>Class</th>
+                                <!-- <th class="text-right">Salary</th> -->
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let chapter of chapters; let i = index">
                                 <td>{{ i + 1 }} <!-- Serial number --></td>
-                                <td>{{ chapter.name }} <!-- Chapter name --></td>
-                                <td>{{ chapter.country }} <!-- Country --></td>
-                                <td>{{ chapter.city }} <!-- City --></td>
-                                <td class="text-right">{{ chapter.salary | currency }} <!-- Salary --></td>
+                                <td>{{ chapter.name }}</td>
+                                <td>{{ chapter.subject.name }}</td>
+                                <td>{{ chapter.subject.classEntity.name }}</td>
                                 <td class="text-right">
                                     <button (click)="editChapter(chapter)" class="btn btn-primary btn-round">
                                         Edit

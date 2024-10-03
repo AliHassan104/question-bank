@@ -15,12 +15,11 @@
 
                         <div class="form-group">
                             <label for="dropdown">Select Class</label>
-                            <select id="dropdown" formControlName="subject" class="form-control">
+                            <select id="dropdown" formControlName="class" class="form-control">
                                 <option value="" disabled>Select a Class</option>
-                                <option value="math">IX</option>
-                                <option value="science">X</option>
-                                <option value="english">XI</option>
-                                <option value="history">XII</option>
+                                <option *ngFor="let class of classes; let i = index" value="{{class.id}}">{{ class.name
+                                    }}
+                                </option>
                             </select>
                         </div>
 

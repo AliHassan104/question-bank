@@ -17,8 +17,8 @@
                             <label for="dropdown">Select Class</label>
                             <select id="dropdown" formControlName="class" class="form-control">
                                 <option value="" disabled>Select a class</option>
-                                <option value="ix">IX</option>
-                                <option value="x">X</option>
+                                <option *ngFor="let class of classes; let i = index" value="{{class.id}}">{{ class.name
+                                    }}</option>
                             </select>
                         </div>
 
@@ -26,8 +26,8 @@
                             <label for="dropdown">Select Subject</label>
                             <select id="dropdown" formControlName="subject" class="form-control">
                                 <option value="" disabled>Select a subject</option>
-                                <option value="math">Mathematics</option>
-                                <option value="science">Science</option>
+                                <option *ngFor="let subject of subjects; let i = index" value="{{subject.id}}"
+                                    value="math">{{subject.name}}</option>
                             </select>
                         </div>
 

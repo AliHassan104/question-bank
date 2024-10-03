@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ClassEntity } from 'app/models/class-entities.model';
+import { ClassEntityService } from 'app/services/class-entity.service';
 
 @Component({
   selector: 'app-add-class',
@@ -8,23 +10,36 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AddClassComponent implements OnInit {
 
-  ngOnInit(): void {
-  }
+  classEntityForm: FormGroup;
 
-  nameForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    this.nameForm = this.fb.group({
+  constructor(private fb: FormBuilder, private classEntityService: ClassEntityService) {
+    this.classEntityForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1)]]
     });
   }
 
+  ngOnInit(): void {}
+
   onSubmit() {
-    if (this.nameForm.valid) {
-      console.log('Name added:', this.nameForm.value.name);
-      alert('Name added: ' + this.nameForm.value.name);
-      this.nameForm.reset(); // Reset the form after submission
+    if (this.classEntityForm.valid) {
+      const newClassEntity: ClassEntity = {
+        name: this.classEntityForm.value.name,
+      };
+
+      this.createClassEntity(newClassEntity);
+
+      this.classEntityForm.reset();
     }
   }
 
+  createClassEntity( classEntity: ClassEntity) {
+    this.classEntityService.createClassEntity(classEntity).subscribe(
+      data => {
+        console.log('Class created successfully:', data);
+      },
+      error => {
+        console.error('Error creating class:', error);
+      }
+    );
+  }
 }

@@ -30,7 +30,7 @@ public class SubjectServiceImplementation implements SubjectService {
             Subject existingSubject = existingSubjectOpt.get();
             existingSubject.setName(updatedSubject.getName());
             existingSubject.setClassEntity(updatedSubject.getClassEntity());
-            existingSubject.setChapters(updatedSubject.getChapters());
+            //existingSubject.setChapters(updatedSubject.getChapters());
             return subjectRepository.save(existingSubject);
         } else {
             throw new RuntimeException("Subject not found with id " + id);

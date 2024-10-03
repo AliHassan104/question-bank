@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Page } from '../models/page.model'; // For pagination model
 import { environment } from '../../environments/environment'; // For base API URL
-import { Question, SectionType } from 'app/models/question.model';
+import { Question } from 'app/models/question.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +57,7 @@ export class QuestionService {
 
   // Get filtered Questions with pagination
   getFilteredQuestions(
-    sectionType?: SectionType,
+    sectionType?: string,
     chapterId?: number,
     subjectId?: number,
     classId?: number,
@@ -84,4 +84,23 @@ export class QuestionService {
     const url = `${this.apiUrl}/filter`;
     return this.http.get<Page<Question>>(url, { params });
   }
+
+   // Toggle the "isAddedToPaper" status of a Question by ID
+   toggleAddedToPaper(id: number): Observable<Question> {
+    const url = `${this.apiUrl}/${id}/toggle-paper-status`;
+    return this.http.patch<Question>(url, null);  // Patch request with no body
+  }
+
+  // Get Questions by Subject ID
+  getQuestionsBySubjectId(subjectId: number): Observable<Question[]> {
+    const url = `${this.apiUrl}/subject/${subjectId}`;
+    return this.http.get<Question[]>(url);
+  }
+
+  // Get Questions by Subject ID and only those added to paper
+  getQuestionsBySubjectIdAndAddedToPaper(subjectId: number): Observable<Question[]> {
+    const url = `${this.apiUrl}/subject/${subjectId}/added-to-paper`;
+    return this.http.get<Question[]>(url);
+  }
+
 }

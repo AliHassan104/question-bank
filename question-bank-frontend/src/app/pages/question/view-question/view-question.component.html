@@ -11,23 +11,35 @@
                             <tr>
                                 <th>S. No</th>
                                 <th>Question</th>
-                                <th>Class</th>
                                 <th>Section</th>
+                                <th>Class</th>
+                                <th>Subject</th>
                                 <th>Chapter</th>
                                 <th class="text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let question of questions; let i = index">
-                                <td>{{ i + 1 }}</td> <!-- Serial number -->
-                                <td>{{ question.text }}</td> <!-- Question text -->
-                                <td>{{ question.class }}</td> <!-- Class -->
-                                <td>{{ question.section }}</td> <!-- Section -->
-                                <td>{{ question.chapter }}</td> <!-- Chapter -->
+                            <tr *ngFor="let question of questions; let i = index"
+                                [style.backgroundColor]="question.addedToPaper ? '#dff0d8' : 'transparent'">
+
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ question.questionText }}</td>
+                                <td>{{ question.sectionType }}</td> <!-- Section -->
+                                <td>{{ question.chapter.subject.classEntity.name }}</td> <!-- Class -->
+                                <td>{{ question.chapter.subject.name }}</td> <!-- Class -->
+                                <td>{{ question.chapter.name }}</td> <!-- Chapter -->
                                 <td class="text-right">
-                                    <button (click)="editQuestion(question)" class="btn btn-primary btn-round">
+
+                                    <button (click)="addQuestionToPaper(question)" class="btn btn-primary btn-round">
+                                        Add
+                                    </button>
+                                    <br>
+                                    <br>
+                                    <button (click)="editQuestion(question)" class="btn btn-warning btn-round">
                                         Edit
                                     </button>
+                                    <br>
+                                    <br>
                                     <button (click)="deleteQuestion(question)" class="btn btn-danger btn-round">
                                         Delete
                                     </button>

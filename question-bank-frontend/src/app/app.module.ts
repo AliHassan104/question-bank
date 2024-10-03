@@ -43,7 +43,7 @@ import { HttpClientModule } from '@angular/common/http';
     ViewChapterComponent,
     QuestionComponent,
     ViewQuestionComponent,
-    AddQuestionComponent
+    AddQuestionComponent,
   ],
   imports: [
     BrowserAnimationsModule,

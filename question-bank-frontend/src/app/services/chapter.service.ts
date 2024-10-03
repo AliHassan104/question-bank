@@ -42,7 +42,8 @@ export class ChapterService {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.http.get<Page<Chapter>>(this.apiUrl, { params });
+    return this.http.get<Page<Chapter>>(this.apiUrl);
+    // return this.http.get<Page<Chapter>>(this.apiUrl, { params });
   }
 
   // Search Chapters by name with pagination

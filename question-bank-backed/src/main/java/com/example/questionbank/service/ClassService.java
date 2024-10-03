@@ -13,4 +13,5 @@ public interface ClassService {
     // Pagination and searching
     Page<ClassEntity> getAllClassEntities(Pageable pageable);
     Page<ClassEntity> searchClassEntities(String name, Pageable pageable);
+
 }

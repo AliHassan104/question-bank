@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,5 +74,28 @@ public class QuestionServiceImplementation implements QuestionService {
                 .and(QuestionSpecification.filterByClass(classId));
 
         return questionRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Question toggleAddedToPaper(Long id) {
+        Optional<Question> optionalQuestion = questionRepository.findById(id);
+
+        if (optionalQuestion.isPresent()) {
+            Question question = optionalQuestion.get();
+            question.setAddedToPaper(!question.isAddedToPaper()); // Toggle the value
+            return questionRepository.save(question); // Save and return the updated question
+        } else {
+            throw new RuntimeException("Question not found with id: " + id);
+        }
+    }
+
+    @Override
+    public List<Question> getQuestionsBySubjectId(Long subjectId) {
+        return questionRepository.findByChapterSubjectId(subjectId);
+    }
+
+    @Override
+    public List<Question> getQuestionsBySubjectIdAndAddedToPaper(Long subjectId) {
+        return questionRepository.findByChapterSubjectIdAndIsAddedToPaper(subjectId , true);
     }
 }

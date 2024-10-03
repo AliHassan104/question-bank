@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
@@ -64,6 +67,30 @@ public class QuestionController {
 
         Page<Question> filteredQuestions = questionService.getFilteredQuestions(sectionType, chapterId, subjectId, classId, pageable);
         return ResponseEntity.ok(filteredQuestions);
+    }
+
+    @PatchMapping("/{id}/toggle-paper-status")
+    public ResponseEntity<Question> toggleAddedToPaper(@PathVariable Long id) {
+        try {
+            Question updatedQuestion = questionService.toggleAddedToPaper(id);
+            return ResponseEntity.ok(updatedQuestion);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    // 1. Get all questions based on subject ID
+    @GetMapping("/subject/{subjectId}")
+    public ResponseEntity<List<Question>> getQuestionsBySubjectId(@PathVariable Long subjectId) {
+        List<Question> questions = questionService.getQuestionsBySubjectId(subjectId);
+        return ResponseEntity.ok(questions);
+    }
+
+    // 2. Get questions based on subject ID and added to paper status
+    @GetMapping("/subject/{subjectId}/added-to-paper")
+    public ResponseEntity<List<Question>> getQuestionsBySubjectIdAndAddedToPaper(
+            @PathVariable Long subjectId) {
+        List<Question> questions = questionService.getQuestionsBySubjectIdAndAddedToPaper(subjectId);
+        return ResponseEntity.ok(questions);
     }
 }
 

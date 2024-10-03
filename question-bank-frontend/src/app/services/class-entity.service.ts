@@ -41,10 +41,11 @@ export class ClassEntityService {
 
   // Get all ClassEntities with pagination
   getAllClassEntities(page: number, size: number): Observable<Page<ClassEntity>> {
+    debugger
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.http.get<Page<ClassEntity>>(this.apiUrl, { params });
+    return this.http.get<Page<ClassEntity>>(this.apiUrl);
   }
 
   // Search ClassEntities by name with pagination

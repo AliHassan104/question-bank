@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Chapter } from 'app/models/chapter.model';
+import { ChapterService } from 'app/services/chapter.service';
 
 @Component({
   selector: 'app-view-chapter',
@@ -7,27 +9,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewChapterComponent implements OnInit {
 
-  constructor() { }
+  chapters : Chapter[] = [];
+
+  constructor(private chapterService : ChapterService) { }
 
   ngOnInit(): void {
+    this.getAllChapters(0,10)
   }
-
-  chapters = [
-    { name: 'Dakota Rice', country: 'Niger', city: 'Oud-Turnhout', salary: 36738 },
-    { name: 'Minerva Hooper', country: 'Curaçao', city: 'Sinaai-Waas', salary: 23789 },
-    { name: 'Sage Rodriguez', country: 'Netherlands', city: 'Baileux', salary: 56142 },
-    { name: 'Philip Chaney', country: 'Korea, South', city: 'Overland Park', salary: 38735 }
-    // Add more chapters as needed
-  ];
 
   editChapter(chapter: any) {
     console.log('Editing chapter:', chapter);
-    // Implement your logic for editing the chapter
   }
 
   deleteChapter(chapter: any) {
     console.log('Deleting chapter:', chapter);
-    // Implement your logic for deleting the chapter
   }
+
+  getAllChapters(page: number, size: number) {
+    this.chapterService.getAllChapters(page, size).subscribe({
+      next: (data) => {
+        this.chapters = data.content;
+      },
+      error: (error) => {
+        console.error('Error fetching chapters:', error);
+      },
+      complete: () => {
+        // Optional: Handle any logic after the observable completes.
+        console.log('Fetch completed');
+      }
+    });
+  }
+  
+
 
 }

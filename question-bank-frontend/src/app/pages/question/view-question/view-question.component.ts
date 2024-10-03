@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Question } from 'app/models/question.model';
+import { QuestionService } from 'app/services/question.service';
 
 @Component({
   selector: 'app-view-question',
@@ -7,26 +9,53 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewQuestionComponent implements OnInit {
 
-  constructor() { }
+  constructor(private questionService : QuestionService) { }
 
   ngOnInit(): void {
+    this.getAllQuestions(0,10)
   }
 
-  questions = [
-    { text: 'What is IDE?', class: 'X', section: 'MCQs', chapter: 'Chapter 1' },
-    { text: 'Define OOP.', class: 'XII', section: 'Short', chapter: 'Chapter 2' },
-    { text: 'Explain recursion.', class: 'XI', section: 'Long', chapter: 'Chapter 3' }
-    // Add more questions as needed
-  ];
+  questions : Question[] = [];
 
   editQuestion(question: any) {
     console.log('Editing question:', question);
-    // Implement your logic for editing the question
   }
 
   deleteQuestion(question: any) {
     console.log('Deleting question:', question);
-    // Implement your logic for deleting the question
   }
+
+  getAllQuestions(page: number, size: number) {
+    this.questionService.getAllQuestions(page, size).subscribe({
+      next: data => {
+        console.log(data.content);
+        
+        this.questions = data.content;
+      },
+      error: error => {
+        console.error('Error fetching questions:', error);
+      },
+      complete: () => {
+        console.log('Questions fetched successfully');
+      }
+    });
+  }
+
+  addQuestionToPaper(question: Question) {
+    this.questionService.toggleAddedToPaper(question.id).subscribe({
+      next: data => {
+        console.log(data);
+
+        this.getAllQuestions(0,10)
+      },
+      error: error => {
+        console.error('Error fetching questions:', error);
+      },
+      complete: () => {
+        console.log('Questions fetched successfully');
+      }
+    });
+  }
+  
 
 }

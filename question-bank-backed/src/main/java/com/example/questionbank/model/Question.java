@@ -22,6 +22,7 @@ public class Question {
     private String questionText;
     private Integer marks;
     private String answer;
+    private boolean isAddedToPaper;
 
     @Enumerated(EnumType.STRING)
     private SectionType sectionType;  // Enum: MCQ, Short Answer, Long Answer
@@ -34,4 +35,3 @@ public class Question {
     private List<MCQOption> mcqOptions;  // Only for MCQs
 
 }
-

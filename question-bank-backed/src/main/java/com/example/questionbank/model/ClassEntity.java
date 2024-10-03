@@ -20,8 +20,8 @@ public class ClassEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "classEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Subject> subjects;
+//    @OneToMany(mappedBy = "classEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Subject> subjects;
 
 }
 

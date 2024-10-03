@@ -1,0 +1,23 @@
+<h2>MCQs</h2>
+<ul *ngIf="mcqQuestions.length > 0; else noMcqQuestions">
+    <li *ngFor="let question of mcqQuestions">{{ question.questionText }}</li>
+</ul>
+<ng-template #noMcqQuestions>
+    <p>No MCQ Questions available.</p>
+</ng-template>
+
+<h2>Short Answer Questions</h2>
+<ul *ngIf="shortQuestions.length > 0; else noShortQuestions">
+    <li *ngFor="let question of shortQuestions">{{ question.questionText }}</li>
+</ul>
+<ng-template #noShortQuestions>
+    <p>No Short Answer Questions available.</p>
+</ng-template>
+
+<h2>Long Answer Questions</h2>
+<ul *ngIf="longQuestions.length > 0; else noLongQuestions">
+    <li *ngFor="let question of longQuestions">{{ question.questionText }}</li>
+</ul>
+<ng-template #noLongQuestions>
+    <p>No Long Answer Questions available.</p>
+</ng-template>

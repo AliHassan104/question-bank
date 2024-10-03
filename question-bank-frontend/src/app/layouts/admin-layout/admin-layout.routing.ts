@@ -12,22 +12,23 @@ import { ClassesComponent } from 'app/pages/classes/classes.component';
 import { SubjectComponent } from 'app/pages/subject/subject.component';
 import { ChapterComponent } from 'app/pages/chapter/chapter.component';
 import { QuestionComponent } from 'app/pages/question/question.component';
+import { GeneratePaperComponent } from 'app/pages/subject/generate-paper/generate-paper.component';
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'user',           component: UserComponent },
-    { path: 'table',          component: TableComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'maps',           component: MapsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent },
-
-    // 
+    // { path: 'dashboard',      component: DashboardComponent },
+    // { path: 'user',           component: UserComponent },
+    //{ path: 'table',          component: TableComponent },
+    // { path: 'typography',     component: TypographyComponent },
+    //{ path: 'icons',          component: IconsComponent },
+    // { path: 'maps',           component: MapsComponent },
+    // { path: 'notifications',  component: NotificationsComponent },
+    // { path: 'upgrade',        component: UpgradeComponent },
 
     { path: 'class',        component: ClassesComponent },
     { path: 'subject',        component: SubjectComponent },
+    { path: 'subject/:id',        component: GeneratePaperComponent },
     { path: 'chapter',        component: ChapterComponent },
     { path: 'question',        component: QuestionComponent },
+    { path: 'generate-paper',        component: QuestionComponent },
 
 ];

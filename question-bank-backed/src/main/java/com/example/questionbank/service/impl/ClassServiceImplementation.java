@@ -29,7 +29,7 @@ public class ClassServiceImplementation implements ClassService {
         if (existingClassEntityOpt.isPresent()) {
             ClassEntity existingClassEntity = existingClassEntityOpt.get();
             existingClassEntity.setName(updatedClassEntity.getName());
-            existingClassEntity.setSubjects(updatedClassEntity.getSubjects());
+            //existingClassEntity.setSubjects(updatedClassEntity.getSubjects());
             return classEntityRepository.save(existingClassEntity);
         } else {
             throw new RuntimeException("ClassEntity not found with id " + id);
@@ -56,5 +56,6 @@ public class ClassServiceImplementation implements ClassService {
     public Page<ClassEntity> searchClassEntities(String name, Pageable pageable) {
         return classEntityRepository.findByNameContainingIgnoreCase(name, pageable);
     }
+
 }
 

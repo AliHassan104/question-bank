@@ -1,13 +1,10 @@
+import { Chapter } from "./chapter.model";
+
 export interface Question {
     id?: number;
     questionText: string;
-    sectionType: SectionType;
-    // Add other fields as necessary
-  }
+    sectionType: string;
+    isAddedToPaper: boolean;
+    chapter: Chapter;
+}
   
-  export enum SectionType {
-    MCQ = 'MCQ',
-    SHORT = 'SHORT',
-    LONG = 'LONG',
-    // Add other section types as needed
-  }

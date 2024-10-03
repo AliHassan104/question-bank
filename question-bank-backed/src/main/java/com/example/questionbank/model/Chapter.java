@@ -25,8 +25,8 @@ public class Chapter {
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
-    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Question> questions;
+//    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Question> questions;
 
 }
 

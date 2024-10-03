@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'app/models/subject.model';
+import { SubjectService } from 'app/services/subject.service';
 
 @Component({
   selector: 'app-view-subject',
@@ -7,27 +9,46 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewSubjectComponent implements OnInit {
 
-  constructor() { }
+  constructor(private subjectService : SubjectService) { }
 
   ngOnInit(): void {
+    const defaultPage = 0;
+    const defaultSize = 10;
+    this.getAllSubjects(defaultPage,defaultSize);
   }
-
-  subjects = [
-    { id: 1, name: 'Maths', class: 'IX' },
-    { id: 2, name: 'Physics', class: 'X' },
-    { id: 3, name: 'Chemistry', class: 'XI' }
-    // Add more subjects as needed
-  ];
 
   editSubject(subject: any) {
     console.log('Editing subject:', subject);
-    // Add your logic to edit the subject here
   }
 
   deleteSubject(subject: any) {
     console.log('Deleting subject:', subject);
-    // Add your logic to delete the subject here
   }
 
+  subjects: Subject[] = [];
+
+  getAllSubjects(page: number, size: number) {
+    this.subjectService.getAllSubjects(page, size).subscribe(
+      data => {
+        console.log(data.content);        
+        this.subjects = data.content;
+      },
+      error => {
+        console.error('Error fetching classes:', error);
+      }
+    );
+  }
+
+  get(page: number, size: number) {
+    this.subjectService.getAllSubjects(page, size).subscribe(
+      data => {
+        console.log(data.content);        
+        this.subjects = data.content;
+      },
+      error => {
+        console.error('Error fetching classes:', error);
+      }
+    );
+  }
 
 }

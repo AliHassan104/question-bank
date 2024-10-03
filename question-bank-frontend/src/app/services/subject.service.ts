@@ -42,7 +42,8 @@ export class SubjectService {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.http.get<Page<Subject>>(this.apiUrl, { params });
+    return this.http.get<Page<Subject>>(this.apiUrl);
+    // return this.http.get<Page<Subject>>(this.apiUrl, { params });
   }
 
   // Search Subjects by name with pagination

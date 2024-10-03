@@ -32,10 +32,14 @@
                                     {{ subject.name }} <!-- Subject name -->
                                 </td>
                                 <td>
-                                    {{ subject.class }} <!-- Class name -->
+                                    {{ subject.classEntity.name }} <!-- Class name -->
                                 </td>
                                 <td class="text-right">
-                                    <button (click)="editSubject(subject)" class="btn btn-primary btn-round">
+                                    <button [routerLink]="['/subject/',subject.id]"
+                                        class="btn btn-primary btn-round">Generate
+                                    </button>
+
+                                    <button (click)="editSubject(subject)" class="btn btn-warning btn-round">
                                         Edit
                                     </button>
                                     <button (click)="deleteSubject(subject)" class="btn btn-danger btn-round">
