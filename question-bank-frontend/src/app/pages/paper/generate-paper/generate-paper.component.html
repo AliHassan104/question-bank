@@ -1,0 +1,25 @@
+<div>
+    <div>
+        <h1>Subject</h1>
+        <button class="btn btn-primary btn-round">Generate PDF</button>
+        <button class="btn btn-primary btn-round">Generate Word</button>
+    </div>
+
+    <h2>MCQs</h2>
+    <ul *ngIf="mcqQuestions.length > 0">
+        <li *ngFor="let question of mcqQuestions">{{ question.questionText }}</li>
+    </ul>
+    <p *ngIf="mcqQuestions.length === 0">No MCQ questions added</p>
+
+    <h2>Short Answer Questions</h2>
+    <ul *ngIf="shortQuestions.length > 0">
+        <li *ngFor="let question of shortQuestions">{{ question.questionText }}</li>
+    </ul>
+    <p *ngIf="shortQuestions.length === 0">No short questions added</p>
+
+    <h2>Long Answer Questions</h2>
+    <ul *ngIf="longQuestions.length > 0">
+        <li *ngFor="let question of longQuestions">{{ question.questionText }}</li>
+    </ul>
+    <p *ngIf="longQuestions.length === 0">No long questions added</p>
+</div>
