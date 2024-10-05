@@ -26,6 +26,7 @@ import { ViewQuestionComponent } from './pages/question/view-question/view-quest
 import { AddQuestionComponent } from './pages/question/add-question/add-question.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
+import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-paper.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { HttpClientModule } from '@angular/common/http';
     QuestionComponent,
     ViewQuestionComponent,
     AddQuestionComponent,
+    GeneratePaperComponent,
   ],
   imports: [
     BrowserAnimationsModule,

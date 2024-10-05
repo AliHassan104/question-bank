@@ -12,7 +12,7 @@ import { ClassesComponent } from 'app/pages/classes/classes.component';
 import { SubjectComponent } from 'app/pages/subject/subject.component';
 import { ChapterComponent } from 'app/pages/chapter/chapter.component';
 import { QuestionComponent } from 'app/pages/question/question.component';
-import { GeneratePaperComponent } from 'app/pages/subject/generate-paper/generate-paper.component';
+import { GeneratePaperComponent } from 'app/pages/paper/generate-paper/generate-paper.component';
 
 export const AdminLayoutRoutes: Routes = [
     // { path: 'dashboard',      component: DashboardComponent },
@@ -26,7 +26,7 @@ export const AdminLayoutRoutes: Routes = [
 
     { path: 'class',        component: ClassesComponent },
     { path: 'subject',        component: SubjectComponent },
-    { path: 'subject/:id',        component: GeneratePaperComponent },
+    { path: 'subject/:id',        component:  GeneratePaperComponent},
     { path: 'chapter',        component: ChapterComponent },
     { path: 'question',        component: QuestionComponent },
     { path: 'generate-paper',        component: QuestionComponent },

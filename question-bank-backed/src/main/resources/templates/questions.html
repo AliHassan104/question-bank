@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Question Paper</title>
+</head>
+<body>
+<h1>Question Paper</h1>
+
+<section>
+    <h2>Section A: MCQs</h2>
+    <ul>
+        <li th:each="mcq : ${mcqs}">
+            <span th:text="${mcq.question}">Sample MCQ</span>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Section B: Short Answer Questions</h2>
+    <ul>
+        <li th:each="shortQuestion : ${shortQuestions}">
+            <span th:text="${shortQuestion.question}">Sample Short Question</span>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Section C: Long Answer Questions</h2>
+    <ul>
+        <li th:each="longQuestion : ${longQuestions}">
+            <span th:text="${longQuestion.question}">Sample Long Question</span>
+        </li>
+    </ul>
+</section>
+</body>
+</html>

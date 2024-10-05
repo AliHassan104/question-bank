@@ -9,46 +9,53 @@ import { SubjectService } from 'app/services/subject.service';
 })
 export class ViewSubjectComponent implements OnInit {
 
-  constructor(private subjectService : SubjectService) { }
+  subjects: Subject[] = [];
+  editingSubject: Subject | null = null;
+  //showAddSubject: boolean = true;  // Control whether to show add subject form
+
+  constructor(private subjectService: SubjectService) { }
 
   ngOnInit(): void {
     const defaultPage = 0;
     const defaultSize = 10;
-    this.getAllSubjects(defaultPage,defaultSize);
+    this.getAllSubjects(defaultPage, defaultSize);
   }
 
-  editSubject(subject: any) {
-    console.log('Editing subject:', subject);
+  // Event listener to update the subject list
+  onSubjectUpdated() {
+    this.getAllSubjects(0, 10); // Refresh subject list
+    this.editingSubject = null; // Reset editing mode
   }
 
-  deleteSubject(subject: any) {
-    console.log('Deleting subject:', subject);
+  // Reset editing mode
+  resetEditingMode() {
+    this.editingSubject = null;
   }
 
-  subjects: Subject[] = [];
+  editSubject(subject: Subject) {
+    this.editingSubject = subject; // Set the subject to be edited
+    //this.showAddSubject = true; // Show the add subject form
+  }
+
+  deleteSubject(subject: Subject) {
+    this.subjectService.deleteSubject(subject.id).subscribe(
+      () => {
+        this.getAllSubjects(0, 10); // Refresh subject list after deletion
+      },
+      error => {
+        console.error('Error deleting subject:', error);
+      }
+    );
+  }
 
   getAllSubjects(page: number, size: number) {
     this.subjectService.getAllSubjects(page, size).subscribe(
       data => {
-        console.log(data.content);        
         this.subjects = data.content;
       },
       error => {
-        console.error('Error fetching classes:', error);
+        console.error('Error fetching subjects:', error);
       }
     );
   }
-
-  get(page: number, size: number) {
-    this.subjectService.getAllSubjects(page, size).subscribe(
-      data => {
-        console.log(data.content);        
-        this.subjects = data.content;
-      },
-      error => {
-        console.error('Error fetching classes:', error);
-      }
-    );
-  }
-
 }

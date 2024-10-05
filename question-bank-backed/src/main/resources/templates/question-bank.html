@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Question Bank</title>
+</head>
+<body>
+<h1>Question Bank for [[${className}]] - [[${subjectName}]]</h1>
+
+<h2>MCQs</h2>
+<ul>
+    <li th:each="question : ${mcqs}">
+        [[${question.text}]]
+    </li>
+</ul>
+
+<h2>Short Answer Questions</h2>
+<ul>
+    <li th:each="question : ${shortQuestions}">
+        [[${question.text}]]
+    </li>
+</ul>
+
+<h2>Long Answer Questions</h2>
+<ul>
+    <li th:each="question : ${longQuestions}">
+        [[${question.text}]]
+    </li>
+</ul>
+</body>
+</html>
