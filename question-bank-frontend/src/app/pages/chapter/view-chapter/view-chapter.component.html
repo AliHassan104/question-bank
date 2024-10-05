@@ -1,8 +1,15 @@
+<!-- <div class="update ml-auto mr-auto">
+    <button (click)="selectedChapter = null" type="submit" class="btn btn-primary btn-round">Add Chapter</button>
+</div> -->
+
+<!-- Pass selected chapter to add-chapter component -->
+<app-add-chapter [selectedChapter]="selectedChapter" (chapterAdded)="onChapterAdded()"></app-add-chapter>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"> All Chapters</h4>
+                <h4 class="card-title">All Chapters</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -13,23 +20,20 @@
                                 <th>Name</th>
                                 <th>Subject</th>
                                 <th>Class</th>
-                                <!-- <th class="text-right">Salary</th> -->
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let chapter of chapters; let i = index">
-                                <td>{{ i + 1 }} <!-- Serial number --></td>
+                                <td>{{ i + 1 }}</td>
                                 <td>{{ chapter.name }}</td>
                                 <td>{{ chapter.subject.name }}</td>
                                 <td>{{ chapter.subject.classEntity.name }}</td>
                                 <td class="text-right">
-                                    <button (click)="editChapter(chapter)" class="btn btn-primary btn-round">
-                                        Edit
-                                    </button>
-                                    <button (click)="deleteChapter(chapter)" class="btn btn-danger btn-round">
-                                        Delete
-                                    </button>
+                                    <button (click)="editChapter(chapter)"
+                                        class="btn btn-primary btn-round">Edit</button>
+                                    <button (click)="deleteChapter(chapter)"
+                                        class="btn btn-danger btn-round">Delete</button>
                                 </td>
                             </tr>
                         </tbody>

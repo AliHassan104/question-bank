@@ -1,3 +1,7 @@
+<!-- Add class component, binding events -->
+<app-add-class [editingClass]="editingClass" (classUpdated)="onClassUpdated()"
+    (resetEditing)="resetEditingMode()"></app-add-class>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -19,28 +23,25 @@
                             </th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let class of classes; let i = index">
+                            <tr *ngFor="let classItem of classes; let i = index">
                                 <td>
                                     {{ i + 1 }} <!-- Serial number (S. No) -->
                                 </td>
                                 <td>
-                                    {{ class.name }}
+                                    {{ classItem.name }}
                                 </td>
                                 <td class="text-right">
-                                    <div class="">
-                                        <div class="update ml-auto mr-auto">
-                                            <button (click)="editClass(class.id)" class="btn btn-primary btn-round">
-                                                Edit
-                                            </button>
-                                            <button (click)="deleteClass(class.id)" class="btn btn-danger btn-round">
-                                                Delete
-                                            </button>
-                                        </div>
+                                    <div class="update ml-auto mr-auto">
+                                        <button (click)="editClass(classItem)" class="btn btn-primary btn-round">
+                                            Edit
+                                        </button>
+                                        <button (click)="deleteClass(classItem)" class="btn btn-danger btn-round">
+                                            Delete
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
-
                     </table>
                 </div>
             </div>

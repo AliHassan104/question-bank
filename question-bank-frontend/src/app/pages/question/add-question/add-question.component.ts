@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Chapter } from 'app/models/chapter.model';
 import { ClassEntity } from 'app/models/class-entities.model';
 import { Question } from 'app/models/question.model';
@@ -18,24 +18,23 @@ export class AddQuestionComponent implements OnInit {
 
   classes: ClassEntity[] = [];
   subjects: Subject[] = [];
-  chapters : Chapter[] = [];
+  chapters: Chapter[] = [];
+  isMCQSelected: boolean = false;  // Flag for checking MCQ selection
 
   questionForm: FormGroup;
 
-  constructor(private fb: FormBuilder ,
-    private classEntityService : ClassEntityService,
-    private subjectService : SubjectService ,
-    private chapterService : ChapterService,
-    private questionService : QuestionService
-  ) {}
+  constructor(private fb: FormBuilder,
+    private classEntityService: ClassEntityService,
+    private subjectService: SubjectService,
+    private chapterService: ChapterService,
+    private questionService: QuestionService
+  ) { }
 
   ngOnInit(): void {
 
-    this.getAllClasses(0,10)
-
-    this.getAllSubjects(0,10)
-
-    this.getAllChapters(0,10)
+    this.getAllClasses(0, 10);
+    this.getAllSubjects(0, 10);
+    this.getAllChapters(0, 10);
 
     this.questionForm = this.fb.group({
       name: ['', Validators.required],
@@ -43,12 +42,40 @@ export class AddQuestionComponent implements OnInit {
       sectionType: ['', Validators.required],
       class: '', 
       subject: '', 
+      options: this.fb.array([]) // FormArray for MCQ options
     });
+
+    // Listen for sectionType changes
+    this.questionForm.get('sectionType')?.valueChanges.subscribe(value => {
+      this.isMCQSelected = value === 'MCQ';
+      if (this.isMCQSelected) {
+        this.addMCQOptions();
+      } else {
+        this.clearMCQOptions();
+      }
+    });
+  }
+
+  // Get form array of MCQ options
+  get options(): FormArray {
+    return this.questionForm.get('options') as FormArray;
+  }
+
+  // Add 4 blank options for MCQs
+  addMCQOptions(): void {
+    this.clearMCQOptions();  // Clear any existing options before adding
+    for (let i = 0; i < 4; i++) {
+      this.options.push(this.fb.control('', Validators.required));
+    }
+  }
+
+  // Clear all options when MCQ is deselected
+  clearMCQOptions(): void {
+    this.options.clear();
   }
 
   onSubmit(): void {
     if (this.questionForm.valid) {
-
       const newQuestionEntity: Question = {
         questionText: this.questionForm.value.name,
         chapter: {
@@ -59,6 +86,11 @@ export class AddQuestionComponent implements OnInit {
         sectionType: this.questionForm.value.sectionType,
         isAddedToPaper: false
       };
+
+      if (this.isMCQSelected) {
+        newQuestionEntity['options'] = this.questionForm.value.options;  // Add options if MCQ
+      }
+
       this.createQuestionEntity(newQuestionEntity);
       this.questionForm.reset();
     }

@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>Add Subject</h3>
+                    <h3>{{ editingSubject ? 'Edit' : 'Add' }} Subject</h3>
                 </div>
                 <div class="card-body">
                     <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
@@ -17,14 +17,17 @@
                             <label for="dropdown">Select Class</label>
                             <select id="dropdown" formControlName="class" class="form-control">
                                 <option value="" disabled>Select a Class</option>
-                                <option *ngFor="let class of classes; let i = index" value="{{class.id}}">{{ class.name
-                                    }}
+                                <option *ngFor="let class of classes" [value]="class.id">
+                                    {{ class.name }}
                                 </option>
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-block"
-                            [disabled]="subjectForm.invalid">Add</button>
+
+                        <button type="submit" class="btn btn-primary btn-block" [disabled]="subjectForm.invalid">
+                            {{ editingSubject ? 'Update' : 'Add' }}
+                        </button>
+
                     </form>
                 </div>
             </div>
