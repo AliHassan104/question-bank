@@ -11,8 +11,5 @@ export class SubjectComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-
-  showAddSubject = false;
-
+  
 }

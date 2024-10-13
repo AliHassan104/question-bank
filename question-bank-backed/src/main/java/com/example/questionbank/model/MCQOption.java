@@ -19,11 +19,8 @@ public class MCQOption {
 
     private String optionText;
 
-    private boolean isCorrect;  // To indicate the correct option
-
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
-    // Getters and Setters
 }

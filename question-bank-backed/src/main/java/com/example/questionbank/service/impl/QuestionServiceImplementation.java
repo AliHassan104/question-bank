@@ -33,11 +33,8 @@ public class QuestionServiceImplementation implements QuestionService {
         if (existingQuestionOpt.isPresent()) {
             Question existingQuestion = existingQuestionOpt.get();
             existingQuestion.setQuestionText(updatedQuestion.getQuestionText());
-            existingQuestion.setMarks(updatedQuestion.getMarks());
-            existingQuestion.setAnswer(updatedQuestion.getAnswer());
             existingQuestion.setSectionType(updatedQuestion.getSectionType());
             existingQuestion.setChapter(updatedQuestion.getChapter());
-            existingQuestion.setMcqOptions(updatedQuestion.getMcqOptions());
             return questionRepository.save(existingQuestion);
         } else {
             throw new RuntimeException("Question not found with id " + id);

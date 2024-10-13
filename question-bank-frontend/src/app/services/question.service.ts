@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Page } from '../models/page.model'; // For pagination model
 import { environment } from '../../environments/environment'; // For base API URL
 import { Question } from 'app/models/question.model';
@@ -12,7 +12,7 @@ export class QuestionService {
 
   private apiUrl = `${environment.apiUrl}/api/questions`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Create a new Question
   createQuestion(question: Question): Observable<Question> {
@@ -85,8 +85,8 @@ export class QuestionService {
     return this.http.get<Page<Question>>(url, { params });
   }
 
-   // Toggle the "isAddedToPaper" status of a Question by ID
-   toggleAddedToPaper(id: number): Observable<Question> {
+  // Toggle the "isAddedToPaper" status of a Question by ID
+  toggleAddedToPaper(id: number): Observable<Question> {
     const url = `${this.apiUrl}/${id}/toggle-paper-status`;
     return this.http.patch<Question>(url, null);  // Patch request with no body
   }
@@ -101,6 +101,28 @@ export class QuestionService {
   getQuestionsBySubjectIdAndAddedToPaper(subjectId: number): Observable<Question[]> {
     const url = `${this.apiUrl}/subject/${subjectId}/added-to-paper`;
     return this.http.get<Question[]>(url);
+  }
+
+  generatePaper(subjectId: number): Observable<void> {
+    const url = `${this.apiUrl}/question-bank/pdf/${subjectId}`;
+
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      map((pdfBlob: Blob) => {
+        // Create a URL for the Blob object
+        const pdfUrl = window.URL.createObjectURL(pdfBlob);
+
+        // Create an anchor element to trigger download
+        const anchor = document.createElement('a');
+        anchor.href = pdfUrl;
+        anchor.download = 'question-bank.pdf';  // Name of the PDF file to download
+
+        // Trigger the download
+        anchor.click();
+
+        // Clean up the URL object
+        window.URL.revokeObjectURL(pdfUrl);
+      })
+    );
   }
 
 }

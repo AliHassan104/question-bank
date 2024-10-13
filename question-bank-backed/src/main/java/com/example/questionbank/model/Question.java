@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -20,8 +19,6 @@ public class Question {
     private Long id;
 
     private String questionText;
-    private Integer marks;
-    private String answer;
     private boolean isAddedToPaper;
 
     @Enumerated(EnumType.STRING)
@@ -30,8 +27,5 @@ public class Question {
     @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
-
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MCQOption> mcqOptions;  // Only for MCQs
 
 }

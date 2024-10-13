@@ -22,16 +22,16 @@ export class AddChapterComponent implements OnInit {
   @Input() selectedChapter: Chapter | null = null;   // Input for editing
 
   constructor(private fb: FormBuilder, private classEntityService: ClassEntityService,
-              private subjectService: SubjectService, private chapterService: ChapterService) {}
+    private subjectService: SubjectService, private chapterService: ChapterService) { }
 
   ngOnInit(): void {
-    this.getAllClasses(0, 10);
-    this.getAllSubjects(0, 10);
+    this.getAllClasses();
+    this.getAllSubjects();
 
     // Initialize form
     this.chapterForm = this.fb.group({
       name: ['', Validators.required],
-      class: ['', Validators.required],
+      class: [''], //, Validators.required
       subject: ['', Validators.required],
     });
 
@@ -68,12 +68,10 @@ export class AddChapterComponent implements OnInit {
           classEntity: null
         }
       };
-      
+
       if (this.selectedChapter) {
-        // Edit existing chapter
         this.updateChapterEntity(this.selectedChapter.id, newChapterEntity);
       } else {
-        // Add new chapter
         this.createChapterEntity(newChapterEntity);
       }
     }
@@ -83,8 +81,8 @@ export class AddChapterComponent implements OnInit {
     this.chapterService.createChapter(chapter).subscribe({
       next: (data) => {
         console.log('Chapter created successfully:', data);
-        this.chapterAdded.emit(); // Emit event to update the chapter view
-        this.chapterForm.reset(); // Reset the form
+        this.chapterAdded.emit();
+        this.chapterForm.reset();
       },
       error: (error) => {
         console.error('Error creating chapter:', error);
@@ -105,10 +103,10 @@ export class AddChapterComponent implements OnInit {
     });
   }
 
-  getAllClasses(page: number, size: number): void {
-    this.classEntityService.getAllClassEntities(page, size).subscribe({
+  getAllClasses(): void {
+    this.classEntityService.getAllClassEntities().subscribe({
       next: (data) => {
-        this.classes = data.content;
+        this.classes = data;
       },
       error: (error) => {
         console.error('Error fetching classes:', error);
@@ -116,14 +114,33 @@ export class AddChapterComponent implements OnInit {
     });
   }
 
-  getAllSubjects(page: number, size: number): void {
-    this.subjectService.getAllSubjects(page, size).subscribe({
+  getAllSubjects(): void {
+    this.subjectService.getAllSubjects().subscribe({
       next: (data) => {
-        this.subjects = data.content;
+        this.subjects = data;
       },
       error: (error) => {
         console.error('Error fetching subjects:', error);
       }
     });
+  }
+
+  onClassChange(value: string) {
+    if (value == 'all' || value == '') {
+      this.getAllSubjects();
+    } else {
+      this.getFilteredSubject(parseInt(value))
+    }
+  }
+
+  getFilteredSubject(classId: number) {
+    this.subjectService.filterSubjectsByClass(classId).subscribe(
+      data => {
+        this.subjects = data;
+      },
+      error => {
+        console.error('Error fetching classes:', error);
+      }
+    );
   }
 }

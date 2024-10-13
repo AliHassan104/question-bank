@@ -23,7 +23,7 @@ export class AddSubjectComponent implements OnInit {
     private fb: FormBuilder,
     private classEntityService: ClassEntityService,
     private subjectService: SubjectService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllClasses(0, 10);
@@ -33,7 +33,6 @@ export class AddSubjectComponent implements OnInit {
       class: ['', Validators.required],
     });
 
-    // Populate form if editingSubject is set
     if (this.editingSubject) {
       this.subjectForm.patchValue({
         name: this.editingSubject.name,
@@ -54,7 +53,7 @@ export class AddSubjectComponent implements OnInit {
       }
     }
   }
-  
+
   onSubmit() {
     if (this.subjectForm.valid) {
       const newSubjectEntity: Subject = {
@@ -74,9 +73,9 @@ export class AddSubjectComponent implements OnInit {
   }
 
   getAllClasses(page: number, size: number) {
-    this.classEntityService.getAllClassEntities(page, size).subscribe(
+    this.classEntityService.getAllClassEntities().subscribe(
       data => {
-        this.classes = data.content;
+        this.classes = data;
       },
       error => {
         console.error('Error fetching classes:', error);
@@ -87,8 +86,8 @@ export class AddSubjectComponent implements OnInit {
   createSubjectEntity(subject: Subject) {
     this.subjectService.createSubject(subject).subscribe(
       () => {
-        this.subjectUpdated.emit(); // Notify parent to refresh subject list
-        this.subjectForm.reset(); // Reset form for adding
+        this.subjectUpdated.emit();
+        this.subjectForm.reset();
       },
       error => {
         console.error('Error creating subject:', error);

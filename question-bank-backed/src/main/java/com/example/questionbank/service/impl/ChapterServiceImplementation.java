@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,13 +49,23 @@ public class ChapterServiceImplementation implements ChapterService {
     }
 
     @Override
-    public Page<Chapter> getAllChapters(Pageable pageable) {
+    public Page<Chapter> getAllChaptersWithPagination(Pageable pageable) {
         return chapterRepository.findAll(pageable);
     }
 
     @Override
     public Page<Chapter> searchChapters(String name, Pageable pageable) {
         return chapterRepository.findByNameContainingIgnoreCase(name, pageable);
+    }
+
+    @Override
+    public List<Chapter> filterChapters(Long subjectId, Long classId) {
+        return chapterRepository.findBySubjectAndClass(subjectId, classId);
+    }
+
+    @Override
+    public List<Chapter> getAllChapters() {
+        return chapterRepository.findAll();
     }
 }
 

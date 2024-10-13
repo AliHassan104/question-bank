@@ -1,11 +1,3 @@
-<!-- <div class="row">
-    <div class="update ml-auto mr-auto">
-        <button (click)="showAddSubject = !showAddSubject" class="btn btn-primary btn-round">
-            {{ editingSubject ? 'Edit Subject' : 'Add Subject' }}
-        </button>
-    </div>
-</div> -->
-<!-- *ngIf="showAddSubject" -->
 <app-add-subject [editingSubject]="editingSubject" (subjectUpdated)="onSubjectUpdated()"
     (resetEditing)="resetEditingMode()">
 </app-add-subject>
@@ -13,9 +5,20 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title"> All Subjects</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">All Subjects</h4>
+
+                <div class="form-group mb-4">
+                    <select #classDropdown (change)="onClassChange(classDropdown.value)" class="form-control">
+                        <option value="all" selected>All</option>
+                        <option *ngFor="let class of classes" [value]="class.id">
+                            {{ class.name }}
+                        </option>
+                    </select>
+                </div>
+
             </div>
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
@@ -33,7 +36,8 @@
                                 <td>{{ subject.name }}</td> <!-- Subject name -->
                                 <td>{{ subject.classEntity.name }}</td> <!-- Class name -->
                                 <td class="text-right">
-                                    <button class="btn btn-primary btn-round">Generate</button>
+                                    <button [routerLink]="['/subject/',subject.id]"
+                                        class="btn btn-primary btn-round">Generate</button>
                                     <button (click)="editSubject(subject)"
                                         class="btn btn-warning btn-round">Edit</button>
                                     <button (click)="deleteSubject(subject)"

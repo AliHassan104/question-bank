@@ -12,7 +12,7 @@ export class ChapterService {
 
   private apiUrl = `${environment.apiUrl}/api/chapters`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Create a new Chapter
   createChapter(chapter: Chapter): Observable<Chapter> {
@@ -38,12 +38,8 @@ export class ChapterService {
   }
 
   // Get all Chapters with pagination
-  getAllChapters(page: number, size: number): Observable<Page<Chapter>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<Page<Chapter>>(this.apiUrl);
-    // return this.http.get<Page<Chapter>>(this.apiUrl, { params });
+  getAllChapters(): Observable<Chapter[]> {
+    return this.http.get<Chapter[]>(this.apiUrl);
   }
 
   // Search Chapters by name with pagination
@@ -54,5 +50,21 @@ export class ChapterService {
       .set('size', size.toString());
     const url = `${this.apiUrl}/search`;
     return this.http.get<Page<Chapter>>(url, { params });
+  }
+
+  // Filter Chapters by subject and class with pagination
+  filterChapters(subjectId?: number, classId?: number): Observable<Chapter[]> {
+    let params = new HttpParams()
+
+    if (subjectId !== undefined) {
+      params = params.set('subjectId', subjectId.toString());
+    }
+
+    if (classId !== undefined) {
+      params = params.set('classId', classId.toString());
+    }
+
+    const url = `${this.apiUrl}/filter`;
+    return this.http.get<Chapter[]>(url, { params });
   }
 }

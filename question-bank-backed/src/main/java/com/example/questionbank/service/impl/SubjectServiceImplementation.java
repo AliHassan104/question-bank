@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,12 +50,21 @@ public class SubjectServiceImplementation implements SubjectService {
     }
 
     @Override
-    public Page<Subject> getAllSubjects(Pageable pageable) {
-        return subjectRepository.findAll(pageable);
+    public List<Subject> getAllSubjects() {
+        return subjectRepository.findAll();
     }
 
     @Override
-    public Page<Subject> searchSubjects(String name, Pageable pageable) {
-        return subjectRepository.findByNameContainingIgnoreCase(name, pageable);
+    public List<Subject> searchSubjects(String name) {
+        return subjectRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Subject> filterSubjectsByClass(Long classId) {
+        return subjectRepository.findByClassEntityId(classId);
+    }
+
+    @Override
+    public Page<Subject> getAllSubjectsWithPagination(Pageable pageable) {
+        return subjectRepository.findAll(pageable);
     }
 }

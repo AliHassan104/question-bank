@@ -4,6 +4,8 @@ import com.example.questionbank.model.ClassEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ClassService {
     ClassEntity createClassEntity(ClassEntity classEntity);
     ClassEntity updateClassEntity(Long id, ClassEntity classEntity);
@@ -11,7 +13,7 @@ public interface ClassService {
     ClassEntity getClassEntityById(Long id);
 
     // Pagination and searching
-    Page<ClassEntity> getAllClassEntities(Pageable pageable);
+    List<ClassEntity> getAllClassEntities();
     Page<ClassEntity> searchClassEntities(String name, Pageable pageable);
 
 }

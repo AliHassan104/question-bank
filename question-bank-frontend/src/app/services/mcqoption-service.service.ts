@@ -12,11 +12,18 @@ export class MCQOptionService {
 
   private apiUrl = `${environment.apiUrl}/api/mcq-options`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Create a new MCQ Option
   createMCQOption(mcqOption: MCQOption): Observable<MCQOption> {
     return this.http.post<MCQOption>(this.apiUrl, mcqOption);
+  }
+
+  createMultipleMCQOptions(mcqOptions: MCQOption[]): Observable<MCQOption[]> {
+    console.log(mcqOptions);
+    const url = `${this.apiUrl}/multiple`; // Adjust based on your API endpoint
+    console.log(url);
+    return this.http.post<MCQOption[]>(url, mcqOptions);
   }
 
   // Update an MCQ Option by ID
@@ -53,5 +60,16 @@ export class MCQOptionService {
       .set('size', size.toString());
     const url = `${this.apiUrl}/search`;
     return this.http.get<Page<MCQOption>>(url, { params });
+  }
+
+
+  getOptionsByQuestionId(questionId: number): Observable<MCQOption[]> {
+    const url = `${this.apiUrl}/${questionId}/options`;
+    return this.http.get<MCQOption[]>(url);
+  }
+
+  getOptionsByMultipleQuestionIds(questionIds: number[]): Observable<{ [key: number]: MCQOption[] }> {
+    const url = `${this.apiUrl}/options-by-ids`;
+    return this.http.post<{ [key: number]: MCQOption[] }>(url, questionIds);
   }
 }

@@ -12,7 +12,7 @@ export class SubjectService {
 
   private apiUrl = `${environment.apiUrl}/api/subjects`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Create a new Subject
   createSubject(subject: Subject): Observable<Subject> {
@@ -38,11 +38,8 @@ export class SubjectService {
   }
 
   // Get all Subjects with pagination
-  getAllSubjects(page: number, size: number): Observable<Page<Subject>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<Page<Subject>>(this.apiUrl);
+  getAllSubjects(): Observable<Subject[]> {
+    return this.http.get<Subject[]>(this.apiUrl);
     // return this.http.get<Page<Subject>>(this.apiUrl, { params });
   }
 
@@ -55,4 +52,13 @@ export class SubjectService {
     const url = `${this.apiUrl}/search`;
     return this.http.get<Page<Subject>>(url, { params });
   }
+
+
+  filterSubjectsByClass(classId: number): Observable<Subject[]> {
+    const params = new HttpParams().set('classId', classId.toString());
+    const url = `${this.apiUrl}/filter-by-class`;
+    return this.http.get<Subject[]>(url, { params });
+  }
+
+
 }

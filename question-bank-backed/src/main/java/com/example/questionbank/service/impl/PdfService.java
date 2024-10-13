@@ -17,6 +17,7 @@ public class PdfService {
     }
 
     public byte[] generatePdf(Context context) {
+        System.out.println(context);
         String html = templateEngine.process("question-bank", context);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

@@ -7,8 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-    Page<Subject> findByNameContainingIgnoreCase(String name, Pageable pageable);
-}
+    List<Subject> findByNameContainingIgnoreCase(String name);
 
+    List<Subject> findByClassEntityId(Long classId);
+}

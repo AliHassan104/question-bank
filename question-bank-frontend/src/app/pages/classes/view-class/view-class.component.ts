@@ -15,14 +15,12 @@ export class ViewClassComponent implements OnInit {
   constructor(private classEntityService: ClassEntityService) { }
 
   ngOnInit(): void {
-    const defaultPage = 0;
-    const defaultSize = 10;
-    this.getAllClasses(defaultPage, defaultSize);
+    this.getAllClasses();
   }
 
   // Event listener to update the list of classes
   onClassUpdated() {
-    this.getAllClasses(0, 10); // Refresh class list
+    this.getAllClasses(); // Refresh class list
     this.editingClass = null; // Reset editing mode to null after update
   }
 
@@ -38,7 +36,7 @@ export class ViewClassComponent implements OnInit {
   deleteClass(classItem: ClassEntity) {
     this.classEntityService.deleteClassEntity(classItem.id).subscribe(
       () => {
-        this.getAllClasses(0, 10); // Refresh after deletion
+        this.getAllClasses(); // Refresh after deletion
       },
       error => {
         console.error('Error deleting class:', error);
@@ -46,10 +44,12 @@ export class ViewClassComponent implements OnInit {
     );
   }
 
-  getAllClasses(page: number, size: number) {
-    this.classEntityService.getAllClassEntities(page, size).subscribe(
+  getAllClasses() {
+    this.classEntityService.getAllClassEntities().subscribe(
       data => {
-        this.classes = data.content;
+        console.log(data);
+
+        this.classes = data;
       },
       error => {
         console.error('Error fetching classes:', error);

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/subjects")
 public class SubjectController {
@@ -41,14 +43,27 @@ public class SubjectController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Subject>> getAllSubjects(Pageable pageable) {
-        Page<Subject> subjects = subjectService.getAllSubjects(pageable);
+    public ResponseEntity<List<Subject>> getAllSubjects() {
+        List<Subject> subjects = subjectService.getAllSubjects();
+        return ResponseEntity.ok(subjects);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Subject>> getAllSubjectsWithPagination(Pageable pageable) {
+        Page<Subject> subjects = subjectService.getAllSubjectsWithPagination(pageable);
         return ResponseEntity.ok(subjects);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Subject>> searchSubjects(@RequestParam String name, Pageable pageable) {
-        Page<Subject> subjects = subjectService.searchSubjects(name, pageable);
+    public ResponseEntity<List<Subject>> searchSubjects(@RequestParam String name) {
+        List<Subject> subjects = subjectService.searchSubjects(name);
+        return ResponseEntity.ok(subjects);
+    }
+
+    @GetMapping("/filter-by-class")
+    public ResponseEntity<List<Subject>> filterSubjectsByClass(
+            @RequestParam Long classId) {
+        List<Subject> subjects = subjectService.filterSubjectsByClass(classId);
         return ResponseEntity.ok(subjects);
     }
 }

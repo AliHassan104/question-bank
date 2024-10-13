@@ -1,11 +1,59 @@
-<app-add-question></app-add-question>
+<app-add-question [editingQuestion]="editingQuestion" (questionUpdated)="onQuestionUpdated()"
+    (resetEditing)="resetEditingMode()">
+</app-add-question>
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title"> All Questions</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">All Questions</h4>
+
+                <div class="d-flex flex-wrap gap-3 align-items-center">
+                    
+                    <!-- Section Type Dropdown -->
+                    <div class="form-group mb-0">
+                        <select #sectionTypeDropdown (change)="onSectionTypeChange(sectionTypeDropdown.value)"
+                            class="form-control">
+                            <option value="" selected>All</option>
+                            <option value="MCQ">MCQs</option>
+                            <option value="SHORT_QUESTION">Short</option>
+                            <option value="LONG_QUESTION">Long</option>
+                        </select>
+                    </div>
+
+                    <!-- Class Dropdown -->
+                    <div class="form-group mb-0">
+                        <select #classDropdown (change)="onClassChange(classDropdown.value)" class="form-control">
+                            <option value="" selected>All</option>
+                            <option *ngFor="let class of classes" [value]="class.id">
+                                {{ class.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Subject Dropdown -->
+                    <div class="form-group mb-0">
+                        <select #subjectDropdown (change)="onSubjectChange(subjectDropdown.value)" class="form-control">
+                            <option value="" selected>All</option>
+                            <option *ngFor="let subject of subjects" [value]="subject.id">
+                                {{ subject.name }} - {{ subject.classEntity.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Chapter Dropdown -->
+                    <div class="form-group mb-0">
+                        <select #chapterDropdown (change)="onChapterChange(chapterDropdown.value)" class="form-control">
+                            <option value="" selected>All</option>
+                            <option *ngFor="let chapter of chapters" [value]="chapter.id">
+                                {{ chapter.name }} - {{ chapter.subject.name }} -
+                                {{ chapter.subject.classEntity.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
             </div>
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
@@ -25,32 +73,52 @@
                                 [style.backgroundColor]="question.addedToPaper ? '#dff0d8' : 'transparent'">
 
                                 <td>{{ i + 1 }}</td>
-                                <td>{{ question.questionText }}</td>
-                                <td>{{ question.sectionType }}</td> <!-- Section -->
-                                <td>{{ question.chapter.subject.classEntity.name }}</td> <!-- Class -->
-                                <td>{{ question.chapter.subject.name }}</td> <!-- Class -->
-                                <td>{{ question.chapter.name }}</td> <!-- Chapter -->
-                                <td class="text-right">
-
-                                    <button (click)="addQuestionToPaper(question)" class="btn btn-primary btn-round">
-                                        Add
-                                    </button>
-                                    <br>
-                                    <br>
-                                    <button (click)="editQuestion(question)" class="btn btn-warning btn-round">
-                                        Edit
-                                    </button>
-                                    <br>
-                                    <br>
-                                    <button (click)="deleteQuestion(question)" class="btn btn-danger btn-round">
-                                        Delete
-                                    </button>
+                                <td class="large-question-text">{{ question.questionText }}
+                                    <div *ngIf="question.sectionType === 'MCQ'">
+                                <td>
+                                    <div *ngIf="mcqOptions[question.id]?.length; else noOptions">
+                                        <strong>Options:</strong>
+                                        <ul>
+                                            <li *ngFor="let option of mcqOptions[question.id]">
+                                                {{ option.optionText }} {{ option.correct ? '(Correct)' : '' }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <ng-template #noOptions>
+                                        <em>No options available for this question.</em>
+                                    </ng-template>
                                 </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
+                </td>
+
+                <!-- </div>
+                </td> -->
+                <td>{{ question.sectionType }}</td>
+                <td>{{ question.chapter.subject.classEntity.name }}</td>
+                <td>{{ question.chapter.subject.name }}</td>
+                <td>{{ question.chapter.name }}</td>
+
+                <td class="text-right">
+
+                    <button (click)="addQuestionToPaper(question)" class="btn btn-primary btn-round">
+                        Add
+                    </button>
+                    <br>
+                    <br>
+                    <button (click)="editQuestion(question)" class="btn btn-warning btn-round">
+                        Edit
+                    </button>
+                    <br>
+                    <br>
+                    <button (click)="deleteQuestion(question)" class="btn btn-danger btn-round">
+                        Delete
+                    </button>
+                </td>
+                </tr>
+                </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 </div>

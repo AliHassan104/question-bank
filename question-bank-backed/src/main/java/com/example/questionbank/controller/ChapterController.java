@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/chapters")
 public class ChapterController {
@@ -41,8 +43,14 @@ public class ChapterController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Chapter>> getAllChapters(Pageable pageable) {
-        Page<Chapter> chapters = chapterService.getAllChapters(pageable);
+    public ResponseEntity<List<Chapter>> getAllChapters() {
+        List<Chapter> chapters = chapterService.getAllChapters();
+        return ResponseEntity.ok(chapters);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Chapter>> getAllChaptersWithPagination(Pageable pageable) {
+        Page<Chapter> chapters = chapterService.getAllChaptersWithPagination(pageable);
         return ResponseEntity.ok(chapters);
     }
 
@@ -51,5 +59,13 @@ public class ChapterController {
         Page<Chapter> chapters = chapterService.searchChapters(name, pageable);
         return ResponseEntity.ok(chapters);
     }
-}
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<Chapter>> filterChapters(
+            @RequestParam(required = false) Long subjectId,
+            @RequestParam(required = false) Long classId
+            ) {
+        List<Chapter> chapters = chapterService.filterChapters(subjectId, classId);
+        return ResponseEntity.ok(chapters);
+    }
+}

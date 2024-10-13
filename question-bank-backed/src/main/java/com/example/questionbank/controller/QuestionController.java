@@ -1,7 +1,9 @@
 package com.example.questionbank.controller;
 
+import com.example.questionbank.model.MCQOption;
 import com.example.questionbank.model.Question;
 import com.example.questionbank.model.enums.SectionType;
+import com.example.questionbank.service.MCQOptionService;
 import com.example.questionbank.service.QuestionService;
 import com.example.questionbank.service.impl.PdfService;
 import com.example.questionbank.service.impl.WordService;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/questions")
@@ -26,6 +30,9 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private MCQOptionService mcqOptionService;
 
     @Autowired
     private PdfService pdfService;
@@ -106,20 +113,6 @@ public class QuestionController {
         return ResponseEntity.ok(questions);
     }
 
-    @GetMapping("/questions")
-    public String getQuestions(Model model) {
-        // Add your question data here
-        List<Question> mcqs = null; // Load MCQs
-        List<Question> shortQuestions =null ; // Load short answer questions
-        List<Question> longQuestions = null; // Load long answer questions
-
-        model.addAttribute("mcqs", mcqs);
-        model.addAttribute("shortQuestions", shortQuestions);
-        model.addAttribute("longQuestions", longQuestions);
-
-        return "questions";  // Return Thymeleaf template
-    }
-
     @GetMapping("/export/word")
     public void exportToWord(HttpServletResponse response) throws Exception {
         response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
@@ -144,33 +137,40 @@ public class QuestionController {
         document.close();
     }
 
-    @GetMapping("/question-bank")
-    public String showQuestionBank(Model model) {
-        // Add attributes for Thymeleaf to render
-        model.addAttribute("className", "Class 10");
-        model.addAttribute("subjectName", "Mathematics");
-
-        // Dummy data for the example
-        List<Question> mcqs = null;
-        List<Question> shortQuestions = null;
-        List<Question> longQuestions = null;
-
-        model.addAttribute("mcqs", mcqs);
-        model.addAttribute("shortQuestions", shortQuestions);
-        model.addAttribute("longQuestions", longQuestions);
-
-        return "question-bank";
-    }
-
-    @GetMapping("/question-bank/pdf")
+    @GetMapping("/question-bank/pdf/{subjectId}")
     @ResponseBody
-    public void downloadPdf(HttpServletResponse response) throws IOException {
+    public void downloadPdf(HttpServletResponse response, @PathVariable Long subjectId) throws IOException {
         Context context = new Context();
+
         context.setVariable("className", "Class 10");
         context.setVariable("subjectName", "Mathematics");
-        context.setVariable("mcqs", null);
-        context.setVariable("shortQuestions", null);
-        context.setVariable("longQuestions", null);
+
+        List<Question> questions = questionService.getQuestionsBySubjectId(subjectId);
+
+        List<Question> mcqQuestions = questions.stream()
+                .filter(q -> q.getSectionType() == SectionType.MCQ)
+                .collect(Collectors.toList());
+
+        if (!mcqQuestions.isEmpty()) {
+            List<Long> questionIds = new ArrayList<>();
+            mcqQuestions.forEach(e -> questionIds.add(e.getId()));
+
+            Map<Long, List<MCQOption>> options = mcqOptionService.getOptionsByMultipleQuestionIds(questionIds);
+            context.setVariable("mcqOptionsMap", options); // Add this line
+        }
+
+
+        List<Question> shortQuestions = questions.stream()
+                .filter(q -> q.getSectionType() == SectionType.SHORT_QUESTION)
+                .collect(Collectors.toList());
+
+        List<Question> longQuestions = questions.stream()
+                .filter(q -> q.getSectionType() == SectionType.LONG_QUESTION)
+                .collect(Collectors.toList());
+
+        context.setVariable("MCQ", mcqQuestions);
+        context.setVariable("shortQuestions", shortQuestions);
+        context.setVariable("longQuestions", longQuestions);
 
         byte[] pdfContents = pdfService.generatePdf(context);
 
@@ -178,6 +178,7 @@ public class QuestionController {
         response.setHeader("Content-Disposition", "attachment; filename=question-bank.pdf");
         response.getOutputStream().write(pdfContents);
     }
+
     @GetMapping("/question-bank/word")
     @ResponseBody
     public void downloadWord(HttpServletResponse response) throws IOException {

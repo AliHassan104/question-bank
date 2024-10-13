@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/mcq-options")
 public class MCQOptionController {
@@ -20,6 +23,22 @@ public class MCQOptionController {
     public ResponseEntity<MCQOption> createMCQOption(@RequestBody MCQOption mcqOption) {
         MCQOption createdMCQOption = mcqOptionService.createMCQOption(mcqOption);
         return new ResponseEntity<>(createdMCQOption, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/multiple")
+    public ResponseEntity<List<MCQOption>> createMCQOptions(@RequestBody List<MCQOption> mcqOptions) {
+        List<MCQOption> createdMCQOptions = mcqOptionService.createMCQOptions(mcqOptions);
+        return new ResponseEntity<>(createdMCQOptions, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{questionId}/options")
+    public List<MCQOption> getOptionsByQuestionId(@PathVariable Long questionId) {
+        return mcqOptionService.getOptionsByQuestionId(questionId);
+    }
+
+    @PostMapping("/options-by-ids")
+    public Map<Long, List<MCQOption>> getOptionsByMultipleQuestionIds(@RequestBody List<Long> questionIds) {
+        return mcqOptionService.getOptionsByMultipleQuestionIds(questionIds);
     }
 
     @PutMapping("/{id}")

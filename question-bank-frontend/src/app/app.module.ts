@@ -24,7 +24,7 @@ import { ViewChapterComponent } from './pages/chapter/view-chapter/view-chapter.
 import { QuestionComponent } from './pages/question/question.component';
 import { ViewQuestionComponent } from './pages/question/view-question/view-question.component';
 import { AddQuestionComponent } from './pages/question/add-question/add-question.component';
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-paper.component';
 
@@ -46,6 +46,7 @@ import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-pa
     ViewQuestionComponent,
     AddQuestionComponent,
     GeneratePaperComponent,
+    
   ],
   imports: [
     BrowserAnimationsModule,

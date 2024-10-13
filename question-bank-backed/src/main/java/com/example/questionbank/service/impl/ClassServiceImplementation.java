@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,8 +49,8 @@ public class ClassServiceImplementation implements ClassService {
     }
 
     @Override
-    public Page<ClassEntity> getAllClassEntities(Pageable pageable) {
-        return classEntityRepository.findAll(pageable);
+    public List<ClassEntity> getAllClassEntities() {
+        return classEntityRepository.findAll();
     }
 
     @Override

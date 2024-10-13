@@ -1,36 +1,67 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Question Paper</title>
-</head>
-<body>
-<h1>Question Paper</h1>
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Question Bank - Exam Header</title>-->
+<!--    <style>-->
+<!--        /* Simple styling for the header */-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--        }-->
+<!--        .header {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 30px;-->
+<!--        }-->
+<!--        .header h1, .header h2, .header h3 {-->
+<!--            margin: 5px;-->
+<!--        }-->
+<!--        .header h3 {-->
+<!--            font-weight: normal;-->
+<!--        }-->
+<!--        .section-title {-->
+<!--            text-align: left;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
 
-<section>
-    <h2>Section A: MCQs</h2>
-    <ul>
-        <li th:each="mcq : ${mcqs}">
-            <span th:text="${mcq.question}">Sample MCQ</span>
-        </li>
-    </ul>
-</section>
+<!--&lt;!&ndash; Header Section &ndash;&gt;-->
+<!--<div class="header">-->
+<!--    <h1>CYCLE II</h1>-->
+<!--    <h2>SEPTEMBER 2024</h2>-->
+<!--    <h3>Time: 90 mins</h3>-->
+<!--    <h3>Max Marks: 40</h3>-->
+<!--    <h3>Date: August 21, 2024</h3>-->
+<!--    <h3>COMPUTER II</h3>-->
+<!--</div>-->
 
-<section>
-    <h2>Section B: Short Answer Questions</h2>
-    <ul>
-        <li th:each="shortQuestion : ${shortQuestions}">
-            <span th:text="${shortQuestion.question}">Sample Short Question</span>
-        </li>
-    </ul>
-</section>
+<!--&lt;!&ndash; Rest of the content like sections (MCQs, Short Answer, etc.) &ndash;&gt;-->
+<!--<h2 class="section-title">SECTION 'A' - (MULTIPLE CHOICE QUESTIONS) – (M.C.Qs.) (8 Marks)</h2>-->
+<!--<ol>-->
+<!--    <li th:each="question : ${MCQ}">-->
+<!--        <p>[[${question.questionText}]]</p>-->
+<!--        <ul th:if="${mcqOptionsMap[question.id]} != null">-->
+<!--            <li th:each="option : ${mcqOptionsMap[question.id]}">-->
+<!--                [[${option.optionText}]]-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </li>-->
+<!--</ol>-->
 
-<section>
-    <h2>Section C: Long Answer Questions</h2>
-    <ul>
-        <li th:each="longQuestion : ${longQuestions}">
-            <span th:text="${longQuestion.question}">Sample Long Question</span>
-        </li>
-    </ul>
-</section>
-</body>
-</html>
+<!--&lt;!&ndash; Similarly, add sections B and C &ndash;&gt;-->
+<!--<h2 class="section-title">SECTION 'B' - (SHORT-ANSWER QUESTIONS) (16 Marks)</h2>-->
+<!--<ol>-->
+<!--    <li th:each="question : ${shortQuestions}">-->
+<!--        <span th:text="${question.questionText}"></span>-->
+<!--    </li>-->
+<!--</ol>-->
+
+<!--<h2 class="section-title">SECTION 'C' - (DETAILED-ANSWER QUESTIONS) (16 Marks)</h2>-->
+<!--<ol>-->
+<!--    <li th:each="question : ${longQuestions}">-->
+<!--        <span th:text="${question.questionText}"></span>-->
+<!--    </li>-->
+<!--</ol>-->
+
+<!--</body>-->
+<!--</html>-->

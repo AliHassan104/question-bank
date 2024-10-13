@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ClassEntity } from 'app/models/class-entities.model';
 import { Subject } from 'app/models/subject.model';
+import { ClassEntityService } from 'app/services/class-entity.service';
 import { SubjectService } from 'app/services/subject.service';
+import * as e from 'express';
 
 @Component({
   selector: 'app-view-subject',
@@ -11,19 +15,17 @@ export class ViewSubjectComponent implements OnInit {
 
   subjects: Subject[] = [];
   editingSubject: Subject | null = null;
-  //showAddSubject: boolean = true;  // Control whether to show add subject form
+  classes: ClassEntity[] = [];
 
-  constructor(private subjectService: SubjectService) { }
+  constructor(private subjectService: SubjectService, private route: ActivatedRoute, private classEntityService: ClassEntityService) { }
 
   ngOnInit(): void {
-    const defaultPage = 0;
-    const defaultSize = 10;
-    this.getAllSubjects(defaultPage, defaultSize);
+    this.getAllSubjects();
+    this.getAllClasses()
   }
 
-  // Event listener to update the subject list
   onSubjectUpdated() {
-    this.getAllSubjects(0, 10); // Refresh subject list
+    this.getAllSubjects(); // Refresh subject list
     this.editingSubject = null; // Reset editing mode
   }
 
@@ -33,14 +35,13 @@ export class ViewSubjectComponent implements OnInit {
   }
 
   editSubject(subject: Subject) {
-    this.editingSubject = subject; // Set the subject to be edited
-    //this.showAddSubject = true; // Show the add subject form
+    this.editingSubject = subject;
   }
 
   deleteSubject(subject: Subject) {
     this.subjectService.deleteSubject(subject.id).subscribe(
       () => {
-        this.getAllSubjects(0, 10); // Refresh subject list after deletion
+        this.getAllSubjects(); // Refresh subject list after deletion
       },
       error => {
         console.error('Error deleting subject:', error);
@@ -48,14 +49,45 @@ export class ViewSubjectComponent implements OnInit {
     );
   }
 
-  getAllSubjects(page: number, size: number) {
-    this.subjectService.getAllSubjects(page, size).subscribe(
+  getAllSubjects() {
+    this.subjectService.getAllSubjects().subscribe(
       data => {
-        this.subjects = data.content;
+        this.subjects = data;
       },
       error => {
         console.error('Error fetching subjects:', error);
       }
     );
   }
+
+  getAllClasses() {
+    this.classEntityService.getAllClassEntities().subscribe(
+      data => {
+        this.classes = data;
+      },
+      error => {
+        console.error('Error fetching classes:', error);
+      }
+    );
+  }
+
+  getFilteredSubject(classId: number) {
+    this.subjectService.filterSubjectsByClass(classId).subscribe(
+      data => {
+        this.subjects = data;
+      },
+      error => {
+        console.error('Error fetching classes:', error);
+      }
+    );
+  }
+
+  onClassChange(value: string) {
+    if (value == 'all' || value == '') {
+      this.getAllSubjects();
+    } else {
+      this.getFilteredSubject(parseInt(value))
+    }
+  }
+
 }
