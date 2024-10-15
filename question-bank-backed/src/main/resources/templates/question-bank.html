@@ -3,7 +3,7 @@
 <head>
     <title>Question Bank - Exam Header</title>
     <style>
-        /* Simple styling for the header */
+
         body {
             font-family: Arial, sans-serif;
         }
@@ -11,15 +11,37 @@
             text-align: center;
         }
         .header {
+            width: 100%;
+            border: 2px solid #000;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .header-left, .header-middle, .header-right {
+            float: left;
+            height: 100%;
+        }
+
+        .header-left {
+            width: 20%;
+            background-color: #f0f0f0;
             text-align: center;
-            margin-bottom: 30px;
         }
-        .header h1, .header h2, .header h3 {
-            margin: 5px;
+
+        .header-middle {
+            width: 60%;
+            height: 73%;
+            background-color: #dfe6e9;
+            text-align: center;
+            padding: 20px 0;
         }
-        .header h3 {
-            font-weight: normal;
+
+        .header-right {
+            width: 20%;
+            background-color: #f0f0f0;
+            text-align: center;
         }
+
         .section-title {
             margin: 20px 0;
         }
@@ -28,14 +50,32 @@
 <body>
 
 <!-- Header Section -->
+
 <div class="header">
-    <h1>CYCLE II</h1>
-    <h2>SEPTEMBER 2024</h2>
-    <h3>Time: 90 mins</h3>
-    <h3>Max Marks: 40</h3>
-    <h3>Date: August 21, 2024</h3>
-    <h3>COMPUTER II</h3>
+    <div class="header-left">
+        <img style="width:100%" src="file:///D:/Tools/Workspace/Project/question-bank/question-bank-backed/src/main/resources/templates/logo.png"
+             alt="Logo"/>
+    </div>
+    <div class="header-middle">
+        <h3>Heading 1</h3>
+        <h3>Heading 2</h3>
+        <h3>Heading 3</h3>
+    </div>
+    <div class="header-right">
+        <div>Top</div>
+        <div>Middle</div>
+        <div>Bottom</div>
+    </div>
 </div>
+
+<!--<div class="header">-->
+<!--    <h1>CYCLE II</h1>-->
+<!--    <h2>SEPTEMBER 2024</h2>-->
+<!--    <h3>Time: 90 mins</h3>-->
+<!--    <h3>Max Marks: 40</h3>-->
+<!--    <h3>Date: August 21, 2024</h3>-->
+<!--    <h3>COMPUTER II</h3>-->
+<!--</div>-->
 
 <!-- Rest of the content like sections (MCQs, Short Answer, etc.) -->
 <div th:if="${MCQ != null} and ${#lists.size(MCQ) > 0}">
@@ -43,40 +83,40 @@
 
     <h4 class="section-title center">(MULTIPLE CHOICE QUESTIONS) (8 Marks)</h4>
 
-<ol>
-    <li th:each="question : ${MCQ}">
-        <p>[[${question.questionText}]]</p>
-        <ul th:if="${mcqOptionsMap[question.id]} != null">
-            <li th:each="option : ${mcqOptionsMap[question.id]}">
-                [[${option.optionText}]]
-            </li>
-        </ul>
-    </li>
-</ol>
+    <ol>
+        <li th:each="question : ${MCQ}">
+            <p>[[${question.questionText}]]</p>
+            <ul th:if="${mcqOptionsMap[question.id]} != null">
+                <li th:each="option : ${mcqOptionsMap[question.id]}">
+                    [[${option.optionText}]]
+                </li>
+            </ul>
+        </li>
+    </ol>
 </div>
 
 <div th:if="${shortQuestions != null} and ${#lists.size(shortQuestions) > 0}">
-<h2 class="section-title center">SECTION B</h2>
+    <h2 class="section-title center">SECTION B</h2>
 
-<h4 class="section-title center">(SHORT-ANSWER QUESTIONS) (16 Marks)</h4>
+    <h4 class="section-title center">(SHORT-ANSWER QUESTIONS) (16 Marks)</h4>
 
-<ol>
-    <li th:each="question : ${shortQuestions}">
-        <span th:text="${question.questionText}"></span>
-    </li>
-</ol>
+    <ol>
+        <li th:each="question : ${shortQuestions}">
+            <span th:text="${question.questionText}"></span>
+        </li>
+    </ol>
 
 </div>
 
 <div th:if="${longQuestions != null} and ${#lists.size(longQuestions) > 0}">
-<h2 class="section-title center">SECTION C</h2>
+    <h2 class="section-title center">SECTION C</h2>
 
-<h4 class="section-title center">(DETAILED-ANSWER QUESTIONS) (16 Marks)</h4>
-<ol>
-    <li th:each="question : ${longQuestions}">
-        <span th:text="${question.questionText}"></span>
-    </li>
-</ol>
+    <h4 class="section-title center">(DETAILED-ANSWER QUESTIONS) (16 Marks)</h4>
+    <ol>
+        <li th:each="question : ${longQuestions}">
+            <span th:text="${question.questionText}"></span>
+        </li>
+    </ol>
 </div>
 
 </body>

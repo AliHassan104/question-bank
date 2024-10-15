@@ -1,31 +1,84 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Question Bank - Exam Header</title>-->
-<!--    <style>-->
-<!--        /* Simple styling for the header */-->
-<!--        body {-->
-<!--            font-family: Arial, sans-serif;-->
-<!--        }-->
-<!--        .header {-->
-<!--            text-align: center;-->
-<!--            margin-bottom: 30px;-->
-<!--        }-->
-<!--        .header h1, .header h2, .header h3 {-->
-<!--            margin: 5px;-->
-<!--        }-->
-<!--        .header h3 {-->
-<!--            font-weight: normal;-->
-<!--        }-->
-<!--        .section-title {-->
-<!--            text-align: left;-->
-<!--            margin: 20px 0;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Question Bank - Exam Header</title>
+    <style>
+        /* Simple styling for the header */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .center {
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            border: 2px solid #000;
+            height: 150px;
+        }
 
-<!--&lt;!&ndash; Header Section &ndash;&gt;-->
+        /* Left Section: Logo */
+        .header-left {
+            width: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        /* Middle Section: Three Headings */
+        .header-middle {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            background-color: #dfe6e9;
+        }
+
+        .header-middle h1 {
+            margin: 5px 0;
+            font-size: 24px;
+        }
+
+        /* Right Section: Top, Middle, Bottom */
+        .header-right {
+            width: 20%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+        .section-title {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+
+<div class="header">
+    <!-- Left Section: Logo -->
+    <div class="header-left">
+        <img src="logo.png" alt="Logo" width="100">
+    </div>
+
+    <!-- Middle Section: Three Headings -->
+    <div class="header-middle">
+        <h1>Heading 1</h1>
+        <h1>Heading 2</h1>
+        <h1>Heading 3</h1>
+    </div>
+
+    <!-- Right Section: Top, Middle, Bottom -->
+    <div class="header-right">
+        <div>Top</div>
+        <div>Middle</div>
+        <div>Bottom</div>
+    </div>
+</div>
+
 <!--<div class="header">-->
 <!--    <h1>CYCLE II</h1>-->
 <!--    <h2>SEPTEMBER 2024</h2>-->
@@ -35,33 +88,47 @@
 <!--    <h3>COMPUTER II</h3>-->
 <!--</div>-->
 
-<!--&lt;!&ndash; Rest of the content like sections (MCQs, Short Answer, etc.) &ndash;&gt;-->
-<!--<h2 class="section-title">SECTION 'A' - (MULTIPLE CHOICE QUESTIONS) – (M.C.Qs.) (8 Marks)</h2>-->
-<!--<ol>-->
-<!--    <li th:each="question : ${MCQ}">-->
-<!--        <p>[[${question.questionText}]]</p>-->
-<!--        <ul th:if="${mcqOptionsMap[question.id]} != null">-->
-<!--            <li th:each="option : ${mcqOptionsMap[question.id]}">-->
-<!--                [[${option.optionText}]]-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </li>-->
-<!--</ol>-->
+<!-- Rest of the content like sections (MCQs, Short Answer, etc.) -->
+<div th:if="${MCQ != null} and ${#lists.size(MCQ) > 0}">
+    <h2 class="section-title center">SECTION A</h2>
 
-<!--&lt;!&ndash; Similarly, add sections B and C &ndash;&gt;-->
-<!--<h2 class="section-title">SECTION 'B' - (SHORT-ANSWER QUESTIONS) (16 Marks)</h2>-->
-<!--<ol>-->
-<!--    <li th:each="question : ${shortQuestions}">-->
-<!--        <span th:text="${question.questionText}"></span>-->
-<!--    </li>-->
-<!--</ol>-->
+    <h4 class="section-title center">(MULTIPLE CHOICE QUESTIONS) (8 Marks)</h4>
 
-<!--<h2 class="section-title">SECTION 'C' - (DETAILED-ANSWER QUESTIONS) (16 Marks)</h2>-->
-<!--<ol>-->
-<!--    <li th:each="question : ${longQuestions}">-->
-<!--        <span th:text="${question.questionText}"></span>-->
-<!--    </li>-->
-<!--</ol>-->
+    <ol>
+        <li th:each="question : ${MCQ}">
+            <p>[[${question.questionText}]]</p>
+            <ul th:if="${mcqOptionsMap[question.id]} != null">
+                <li th:each="option : ${mcqOptionsMap[question.id]}">
+                    [[${option.optionText}]]
+                </li>
+            </ul>
+        </li>
+    </ol>
+</div>
 
-<!--</body>-->
-<!--</html>-->
+<div th:if="${shortQuestions != null} and ${#lists.size(shortQuestions) > 0}">
+    <h2 class="section-title center">SECTION B</h2>
+
+    <h4 class="section-title center">(SHORT-ANSWER QUESTIONS) (16 Marks)</h4>
+
+    <ol>
+        <li th:each="question : ${shortQuestions}">
+            <span th:text="${question.questionText}"></span>
+        </li>
+    </ol>
+
+</div>
+
+<div th:if="${longQuestions != null} and ${#lists.size(longQuestions) > 0}">
+    <h2 class="section-title center">SECTION C</h2>
+
+    <h4 class="section-title center">(DETAILED-ANSWER QUESTIONS) (16 Marks)</h4>
+    <ol>
+        <li th:each="question : ${longQuestions}">
+            <span th:text="${question.questionText}"></span>
+        </li>
+    </ol>
+</div>
+
+</body>
+</html>

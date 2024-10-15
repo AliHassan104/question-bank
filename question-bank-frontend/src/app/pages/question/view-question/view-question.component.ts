@@ -135,7 +135,6 @@ export class ViewQuestionComponent implements OnInit {
       }
     });
   }
-  // Event listener to update the subject list
 
   onQuestionUpdated() {
     this.getAllQuestions(0, 10); // Refresh subject list

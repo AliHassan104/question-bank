@@ -22,7 +22,7 @@ public class PdfService {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         ITextRenderer renderer = new ITextRenderer();
-        renderer.setDocumentFromString(html);
+        renderer.setDocumentFromString(html, "file:///D:/Tools/Workspace/Project/question-bank/question-bank-backed/src/main/resources/templates/logo.png/");
         renderer.layout();
         try {
             renderer.createPDF(outputStream);

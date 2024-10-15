@@ -2,9 +2,11 @@ package com.example.questionbank.controller;
 
 import com.example.questionbank.model.MCQOption;
 import com.example.questionbank.model.Question;
+import com.example.questionbank.model.Subject;
 import com.example.questionbank.model.enums.SectionType;
 import com.example.questionbank.service.MCQOptionService;
 import com.example.questionbank.service.QuestionService;
+import com.example.questionbank.service.SubjectService;
 import com.example.questionbank.service.impl.PdfService;
 import com.example.questionbank.service.impl.WordService;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -33,6 +35,9 @@ public class QuestionController {
 
     @Autowired
     private MCQOptionService mcqOptionService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     @Autowired
     private PdfService pdfService;
@@ -142,8 +147,10 @@ public class QuestionController {
     public void downloadPdf(HttpServletResponse response, @PathVariable Long subjectId) throws IOException {
         Context context = new Context();
 
-        context.setVariable("className", "Class 10");
-        context.setVariable("subjectName", "Mathematics");
+        Subject subject = subjectService.getSubjectById(subjectId);
+
+        context.setVariable("className", subject.getClassEntity().getName());
+        context.setVariable("subjectName", subject.getName());
 
         List<Question> questions = questionService.getQuestionsBySubjectId(subjectId);
 
