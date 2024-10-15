@@ -62,9 +62,9 @@
         <h3>Heading 3</h3>
     </div>
     <div class="header-right">
-        <div>Top</div>
-        <div>Middle</div>
-        <div>Bottom</div>
+        <h3>Top</h3>
+        <h3>Middle</h3>
+        <h3>Bottom</h3>
     </div>
 </div>
 
@@ -86,13 +86,17 @@
     <ol>
         <li th:each="question : ${MCQ}">
             <p>[[${question.questionText}]]</p>
-            <ul th:if="${mcqOptionsMap[question.id]} != null">
-                <li th:each="option : ${mcqOptionsMap[question.id]}">
-                    [[${option.optionText}]]
-                </li>
-            </ul>
+            <table th:if="${mcqOptionsMap[question.id]} != null" style="width: 100%; margin-top: 5px;">
+                <tr>
+                    <td th:each="option : ${mcqOptionsMap[question.id]}"
+                        style="text-align: center; padding: 5px;">
+                        [[${option.optionText}]]
+                    </td>
+                </tr>
+            </table>
         </li>
     </ol>
+
 </div>
 
 <div th:if="${shortQuestions != null} and ${#lists.size(shortQuestions) > 0}">
