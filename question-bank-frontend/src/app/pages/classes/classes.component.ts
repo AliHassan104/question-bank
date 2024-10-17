@@ -12,6 +12,4 @@ export class ClassesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  showAddClass = false;
-
 }

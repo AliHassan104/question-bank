@@ -38,21 +38,21 @@ export class QuestionService {
   }
 
   // Get all Questions with pagination
-  getAllQuestions(page: number, size: number): Observable<Page<Question>> {
+  getAllQuestions(page: number, size: number): Observable<Question[]> {
     const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<Page<Question>>(this.apiUrl, { params });
+    //   .set('page', page.toString())
+    //   .set('size', size.toString());
+    return this.http.get<Question[]>(this.apiUrl, { params });
   }
 
   // Search Questions by text with pagination
-  searchQuestions(questionText: string, page: number, size: number): Observable<Page<Question>> {
+  searchQuestions(questionText: string, page: number, size: number): Observable<Question[]> {
     const params = new HttpParams()
       .set('questionText', questionText)
       .set('page', page.toString())
       .set('size', size.toString());
     const url = `${this.apiUrl}/search`;
-    return this.http.get<Page<Question>>(url, { params });
+    return this.http.get<Question[]>(url, { params });
   }
 
   // Get filtered Questions with pagination

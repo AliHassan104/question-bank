@@ -70,8 +70,14 @@ public class QuestionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Question>> getAllQuestions(Pageable pageable) {
-        Page<Question> questions = questionService.getAllQuestions(pageable);
+    public ResponseEntity<List<Question>> getAllQuestions() {
+        List<Question> questions = questionService.getAllQuestions();
+        return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<Question>> getAllQuestionsPagination(Pageable pageable) {
+        Page<Question> questions = questionService.getAllQuestionsPagination(pageable);
         return ResponseEntity.ok(questions);
     }
 

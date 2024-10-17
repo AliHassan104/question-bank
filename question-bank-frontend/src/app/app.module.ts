@@ -5,8 +5,8 @@ import { ToastrModule } from "ngx-toastr";
 
 import { SidebarModule } from './sidebar/sidebar.module';
 import { FooterModule } from './shared/footer/footer.module';
-import { NavbarModule} from './shared/navbar/navbar.module';
-import { FixedPluginModule} from './shared/fixedplugin/fixedplugin.module';
+import { NavbarModule } from './shared/navbar/navbar.module';
+import { FixedPluginModule } from './shared/fixedplugin/fixedplugin.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutes } from './app.routing';
@@ -46,12 +46,12 @@ import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-pa
     ViewQuestionComponent,
     AddQuestionComponent,
     GeneratePaperComponent,
-    
+
   ],
   imports: [
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(AppRoutes,{
+    RouterModule.forRoot(AppRoutes, {
       useHash: true
     }),
     SidebarModule,
@@ -60,7 +60,7 @@ import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-pa
     FooterModule,
     FixedPluginModule,
     HttpClientModule
-    
+
   ],
   providers: [],
   bootstrap: [AppComponent]

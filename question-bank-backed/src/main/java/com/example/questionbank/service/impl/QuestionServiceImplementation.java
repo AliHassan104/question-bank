@@ -53,8 +53,12 @@ public class QuestionServiceImplementation implements QuestionService {
     }
 
     @Override
-    public Page<Question> getAllQuestions(Pageable pageable) {
+    public Page<Question> getAllQuestionsPagination(Pageable pageable) {
         return questionRepository.findAll(pageable);
+    }
+
+    public List<Question> getAllQuestions() {
+        return questionRepository.findAll();
     }
 
     @Override

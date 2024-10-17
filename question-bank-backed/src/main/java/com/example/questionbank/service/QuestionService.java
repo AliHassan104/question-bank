@@ -14,7 +14,10 @@ public interface QuestionService {
     Question getQuestionById(Long id);
 
     // Pagination and searching
-    Page<Question> getAllQuestions(Pageable pageable);
+
+    Page<Question> getAllQuestionsPagination(Pageable pageable);
+
+    List<Question> getAllQuestions();
     Page<Question> searchQuestions(String questionText, Pageable pageable);
     Page<Question> getFilteredQuestions(SectionType sectionType, Long chapterId, Long subjectId, Long classId, Pageable pageable);
 
