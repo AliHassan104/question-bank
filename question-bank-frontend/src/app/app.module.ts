@@ -59,7 +59,8 @@ import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-pa
     ToastrModule.forRoot(),
     FooterModule,
     FixedPluginModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule 
 
   ],
   providers: [],

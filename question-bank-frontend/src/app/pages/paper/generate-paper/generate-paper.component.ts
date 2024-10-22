@@ -18,6 +18,13 @@ export class GeneratePaperComponent implements OnInit {
   mcqOptions: { [key: number]: MCQOption[] } = {};
   subjectId: number;
 
+  paperName: string = '';
+  paperDate: number | null = null;
+  time: string = '';
+  marksSectionA: string = '';
+  marksSectionB: string = '';
+  marksSectionC: string = '';
+
   constructor(private route: ActivatedRoute,
     private questionService: QuestionService,
     private cdr: ChangeDetectorRef,
@@ -31,6 +38,14 @@ export class GeneratePaperComponent implements OnInit {
   }
 
   generatePaper() {
+
+    console.log(this.paperName);
+    console.log(this.paperDate);
+    console.log(this.time);
+    console.log(this.marksSectionA);
+    console.log(this.marksSectionB);
+    console.log(this.marksSectionC);
+
     this.questionService.generatePaper(this.subjectId).subscribe(
       () => {
 

@@ -1,47 +1,107 @@
 <div>
     <div>
         <h1>Subject</h1>
-        <button (click)="generatePaper()" class="btn btn-primary btn-round">Generate PDF</button>
-        <button class="btn btn-primary btn-round" disabled>Generate Word</button>
-        <button class="btn btn-primary btn-round" disabled>Generate PDF Key</button>
-        <button class="btn btn-primary btn-round" disabled>Generate Word Key</button>
+        <button (click)="generatePaper()" class="btn btn-primary btn-round">
+            Generate PDF
+        </button>
+        <button class="btn btn-primary btn-round" disabled>
+            Generate Word
+        </button>
+        <button class="btn btn-primary btn-round" disabled>
+            Generate PDF Key
+        </button>
+        <button class="btn btn-primary btn-round" disabled>
+            Generate Word Key
+        </button>
+        <button class="btn btn-primary btn-round" disabled>
+            Generate All
+        </button>
+        <!-- <button class="btn btn-primary btn-round" disabled>
+            Generate Random Paper
+        </button> -->
     </div>
 
+    <h2>Enter Details</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="field1">Paper Name:</label>
+            <input id="field1" [(ngModel)]="paperName" name="paper" type="text" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label for="field2">Paper Date:</label>
+            <input id="field2" [(ngModel)]="paperDate" name="date" type="date" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label for="field3">Total Time:</label>
+            <input id="field3" [(ngModel)]="time" name="time" type="text" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label for="field4">Total Marks Of Sections A :</label>
+            <input id="field4" [(ngModel)]="marksSectionA" name="sectionA" type="text" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label for="field5">Total Marks Of Sections B :</label>
+            <input id="field5" [(ngModel)]="marksSectionB" name="sectionB" type="text" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label for="field6">Total Marks Of Sections C :</label>
+            <input id="field6" [(ngModel)]="marksSectionC" name="sectionC" type="text" class="form-control" />
+        </div>
+    </div>
+
+    <!-- MCQs Section -->
     <h2>MCQs</h2>
-    <ul *ngIf="mcqQuestions.length > 0">
+    <ol *ngIf="mcqQuestions.length > 0; else noMcqs">
         <li *ngFor="let question of mcqQuestions">
-            <td class="large-question-text">
-                <div> {{ question.questionText }} </div>
-                <div *ngIf="question.sectionType === 'MCQ'">
-                </div>
-            </td>
-            <br>
-            <td>
-                <div *ngIf="mcqOptions[question.id]?.length; else noOptions">
-                    <strong>Options:</strong>
-                    <ul>
-                        <li *ngFor="let option of mcqOptions[question.id]">
-                            {{ option.optionText }} {{ option.correct ? '(Correct)' : '' }}
-                        </li>
-                    </ul>
-                </div>
-                <ng-template #noOptions>
-                    <em>No options available for this question.</em>
-                </ng-template>
-            </td>
+            <div class="large-question-text">
+                <div>{{ question.questionText }}</div>
+                <div *ngIf="question.sectionType === 'MCQ'"></div>
+            </div>
+            <br />
+            <div *ngIf="mcqOptions[question.id]?.length; else noOptions">
+                <strong>Options:</strong>
+                <ol type="a">
+                    <li *ngFor="let option of mcqOptions[question.id]">
+                        {{ option.optionText }}
+                        <span *ngIf="option.correct">(Correct)</span>
+                    </li>
+                </ol>
+            </div>
+            <ng-template #noOptions>
+                <em>No options available for this question.</em>
+            </ng-template>
         </li>
-    </ul>
-    <p *ngIf="mcqQuestions.length === 0">No MCQ questions added</p>
+    </ol>
+    <ng-template #noMcqs>
+        <p>No MCQ questions added</p>
+    </ng-template>
 
+    <!-- Short Answer Section -->
     <h2>Short Answer Questions</h2>
-    <ul *ngIf="shortQuestions.length > 0">
-        <li *ngFor="let question of shortQuestions">{{ question.questionText }}</li>
-    </ul>
-    <p *ngIf="shortQuestions.length === 0">No short questions added</p>
+    <ol *ngIf="shortQuestions.length > 0; else noShortQuestions">
+        <li *ngFor="let question of shortQuestions">
+            {{ question.questionText }}
+        </li>
+    </ol>
+    <ng-template #noShortQuestions>
+        <p>No short questions added</p>
+    </ng-template>
 
+    <!-- Long Answer Section -->
     <h2>Long Answer Questions</h2>
-    <ul *ngIf="longQuestions.length > 0">
-        <li *ngFor="let question of longQuestions">{{ question.questionText }}</li>
-    </ul>
-    <p *ngIf="longQuestions.length === 0">No long questions added</p>
+    <ol *ngIf="longQuestions.length > 0; else noLongQuestions">
+        <li *ngFor="let question of longQuestions">
+            {{ question.questionText }}
+        </li>
+    </ol>
+    <ng-template #noLongQuestions>
+        <p>No long questions added</p>
+    </ng-template>
 </div>

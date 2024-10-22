@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 import javax.servlet.http.HttpServletResponse;
@@ -150,13 +149,28 @@ public class QuestionController {
 
     @GetMapping("/question-bank/pdf/{subjectId}")
     @ResponseBody
-    public void downloadPdf(HttpServletResponse response, @PathVariable Long subjectId) throws IOException {
+    public void downloadPdf(HttpServletResponse response,
+                            @PathVariable Long subjectId,
+                            @RequestParam(value = "paperName", defaultValue = "0", required = false) Integer paperName,
+                            @RequestParam(value = "paperDate", defaultValue = "0", required = false) Integer paperDate,
+                            @RequestParam(value = "time", defaultValue = "0", required = false) Integer time,
+                            @RequestParam(value = "marksSectionA", defaultValue = "0", required = false) Integer marksSectionA,
+                            @RequestParam(value = "marksSectionB", defaultValue = "0", required = false) Integer marksSectionB,
+                            @RequestParam(value = "marksSectionC", defaultValue = "0", required = false) Integer marksSectionC
+    ) throws IOException {
         Context context = new Context();
 
         Subject subject = subjectService.getSubjectById(subjectId);
 
-        context.setVariable("className", subject.getClassEntity().getName());
-        context.setVariable("subjectName", subject.getName());
+        context.setVariable("className"     , subject.getClassEntity().getName());
+        context.setVariable("subjectName"   , subject.getName());
+
+        context.setVariable("paperName"     , paperName);
+        context.setVariable("paperDate"     , paperDate);
+        context.setVariable("time"          , time);
+        context.setVariable("marksSectionA" , marksSectionA);
+        context.setVariable("marksSectionB" , marksSectionB);
+        context.setVariable("marksSectionC" , marksSectionC);
 
         List<Question> questions = questionService.getQuestionsBySubjectId(subjectId);
 
@@ -169,7 +183,7 @@ public class QuestionController {
             mcqQuestions.forEach(e -> questionIds.add(e.getId()));
 
             Map<Long, List<MCQOption>> options = mcqOptionService.getOptionsByMultipleQuestionIds(questionIds);
-            context.setVariable("mcqOptionsMap", options); // Add this line
+            context.setVariable("mcqOptionsMap", options);
         }
 
 
