@@ -6,15 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoleDto {
     private Long id;
     private String name;
-    private Set<Permission> permissions = new HashSet<>();
+    private Set<Permission> permissions;
 }

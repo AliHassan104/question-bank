@@ -36,7 +36,6 @@ export class GeneratePaperComponent implements OnInit {
     this.getQuestionsBySubjectIdAndAddedToPaper(parseInt(id));
     this.subjectId = parseInt(id);
   }
-
   generatePaper() {
 
     console.log(this.paperName);
@@ -47,6 +46,18 @@ export class GeneratePaperComponent implements OnInit {
     console.log(this.marksSectionC);
 
     this.questionService.generatePaper(this.subjectId).subscribe(
+      () => {
+
+      },
+      error => {
+        console.error('Error fetching questions:', error);
+      }
+    );
+  }
+
+  generateSamplePaper() {
+
+    this.questionService.generateSamplePaper().subscribe(
       () => {
 
       },

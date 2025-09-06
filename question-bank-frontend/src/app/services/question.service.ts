@@ -5,6 +5,7 @@ import { Page } from '../models/page.model'; // For pagination model
 import { environment } from '../../environments/environment'; // For base API URL
 import { Question } from 'app/models/question.model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -103,26 +104,61 @@ export class QuestionService {
     return this.http.get<Question[]>(url);
   }
 
+  // generatePaper(subjectId: number): Observable<void> {
+  //   const url = `${this.apiUrl}/question-bank/pdf/${subjectId}`;
+
+  //   return this.http.get(url, { responseType: 'blob' }).pipe(
+  //     map((pdfBlob: Blob) => {
+  //       // Create a URL for the Blob object
+  //       const pdfUrl = window.URL.createObjectURL(pdfBlob);
+
+  //       // Create an anchor element to trigger download
+  //       const anchor = document.createElement('a');
+  //       anchor.href = pdfUrl;
+  //       anchor.download = 'question-bank.pdf';  // Name of the PDF file to download
+
+  //       // Trigger the download
+  //       anchor.click();
+
+  //       // Clean up the URL object
+  //       window.URL.revokeObjectURL(pdfUrl);
+  //     })
+  //   );
+  // }
+
   generatePaper(subjectId: number): Observable<void> {
-    const url = `${this.apiUrl}/question-bank/pdf/${subjectId}`;
+  const url = `http://localhost:8080/api/exam/report/${subjectId}?format=pdf`;
+  return this.http.get(url, { responseType: 'blob' }).pipe(
+    map((blob: Blob) => {
+      const fileURL = URL.createObjectURL(blob);
+      const fileName = `exam-paper.pdf`;
 
-    return this.http.get(url, { responseType: 'blob' }).pipe(
-      map((pdfBlob: Blob) => {
-        // Create a URL for the Blob object
-        const pdfUrl = window.URL.createObjectURL(pdfBlob);
+      const anchor = document.createElement('a');
+      anchor.href = fileURL;
+      anchor.download = fileName;
+      anchor.click();
 
-        // Create an anchor element to trigger download
-        const anchor = document.createElement('a');
-        anchor.href = pdfUrl;
-        anchor.download = 'question-bank.pdf';  // Name of the PDF file to download
+      URL.revokeObjectURL(fileURL);
+    })
+  );
+}
 
-        // Trigger the download
-        anchor.click();
+generateSamplePaper(): Observable<void> {
+  const url = `http://localhost:8080/api/questions/sample-report`;
+  return this.http.get(url, { responseType: 'blob' }).pipe(
+    map((blob: Blob) => {
+      const fileURL = URL.createObjectURL(blob);
+      const fileName = `exam-paper.pdf`;
 
-        // Clean up the URL object
-        window.URL.revokeObjectURL(pdfUrl);
-      })
-    );
-  }
+      const anchor = document.createElement('a');
+      anchor.href = fileURL;
+      anchor.download = fileName;
+      anchor.click();
+
+      URL.revokeObjectURL(fileURL);
+    })
+  );
+}
+
 
 }

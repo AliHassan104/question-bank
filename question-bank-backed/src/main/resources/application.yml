@@ -1,0 +1,6 @@
+jasper:
+  reports:
+    base-path: classpath:reports/templates/
+    fonts-path: classpath:reports/fonts/
+    enable-unicode: true
+    default-encoding: UTF-8
