@@ -1,12 +1,31 @@
-.container {
-    margin-top: 50px;
-  }
+.symbol-icon {
+  font-size: 18px;
+  margin-right: 8px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.form-check {
+  margin-bottom: 10px;
   
-  .card {
-    padding: 20px;
+  .form-check-label {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
   }
-  
-  .btn-block {
-    width: 100%;
-  }
-  
+}
+
+.text-danger {
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.btn {
+  margin-right: 10px;
+}
+
+// Language-specific styling
+.rtl-support {
+  direction: rtl;
+  text-align: right;
+}

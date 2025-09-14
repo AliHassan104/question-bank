@@ -18,7 +18,9 @@
                             <select #classDropdown (change)="onClassChange(classDropdown.value)" id="dropdown"
                                 formControlName="class" class="form-control">
                                 <option value="all">All</option>
-                                <option *ngFor="let class of classes" value="{{ class.id }}">{{ class.name }}</option>
+                                <option *ngFor="let classInfo of classes" value="{{ classInfo.id }}">
+                                    {{ classInfo?.name || 'Unnamed Class' }}
+                                </option>
                             </select>
                         </div>
 
@@ -26,9 +28,9 @@
                             <label for="dropdown">Select Subject</label>
                             <select id="dropdown" formControlName="subject" class="form-control">
                                 <option value="" disabled>Select a subject</option>
-                                <option *ngFor="let subject of subjects" value="{{ subject.id }}">{{ subject.name }} -
-                                    {{subject.classEntity.name}}
-
+                                <option *ngFor="let subjectEntity of subjects" value="{{ subjectEntity.id }}">
+                                    {{ subjectEntity?.name || 'Unnamed Subject' }} -
+                                    {{ subjectEntity?.classInfo?.name || 'No Class' }}
                                 </option>
                             </select>
                         </div>

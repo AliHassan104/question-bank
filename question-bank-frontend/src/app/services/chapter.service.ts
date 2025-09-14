@@ -42,6 +42,12 @@ export class ChapterService {
     return this.http.get<Chapter[]>(this.apiUrl);
   }
 
+  // Get all Chapters with pagination
+  getAllActiveChapters(): Observable<Chapter[]> {
+    const url = `${this.apiUrl}/active`;
+    return this.http.get<Chapter[]>(url);
+  }
+
   // Search Chapters by name with pagination
   searchChapters(name: string, page: number, size: number): Observable<Page<Chapter>> {
     const params = new HttpParams()
@@ -53,7 +59,7 @@ export class ChapterService {
   }
 
   // Filter Chapters by subject and class with pagination
-  filterChapters(subjectId?: number, classId?: number): Observable<Chapter[]> {
+  filterChapters(subjectId?: number, classId?: number, paperLanguage?: string, mcqOptionSize?: string): Observable<Chapter[]> {
     let params = new HttpParams()
 
     if (subjectId !== undefined) {
@@ -64,7 +70,27 @@ export class ChapterService {
       params = params.set('classId', classId.toString());
     }
 
+    if (paperLanguage !== undefined) {
+      params = params.set('paperLanguage', paperLanguage);
+    }
+
+    if (mcqOptionSize !== undefined) {
+      params = params.set('mcqOptionSize', mcqOptionSize);
+    }
+
     const url = `${this.apiUrl}/filter`;
     return this.http.get<Chapter[]>(url, { params });
+  }
+
+  // Generate paper with template and sub-report options
+  generatePaper(chapterId: number, options: {
+    outputFormat: 'pdf' | 'word';
+    wordTemplate?: string;
+    pdfTemplate?: string;
+    useSubReports?: boolean;
+    subReports?: string[];
+  }): Observable<Blob> {
+    const url = `${this.apiUrl}/${chapterId}/generate`;
+    return this.http.post(url, options, { responseType: 'blob' });
   }
 }

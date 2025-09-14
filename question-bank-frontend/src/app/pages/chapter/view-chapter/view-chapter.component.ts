@@ -33,7 +33,6 @@ export class ViewChapterComponent implements OnInit {
   deleteChapter(chapter: Chapter): void {
     this.chapterService.deleteChapter(chapter.id).subscribe({
       next: () => {
-        console.log('Chapter deleted successfully');
         this.getAllChapters(); // Refresh the chapters list
       },
       error: (error) => {
@@ -43,9 +42,10 @@ export class ViewChapterComponent implements OnInit {
   }
 
   getAllChapters(): void {
-    this.chapterService.getAllChapters().subscribe({
+    this.chapterService.getAllActiveChapters().subscribe({
       next: (data) => {
-        this.chapters = data;
+        // Filter out any invalid chapter objects
+        this.chapters = data.filter(chapter => chapter && chapter.name);
       },
       error: (error) => {
         console.error('Error fetching chapters:', error);
@@ -59,7 +59,6 @@ export class ViewChapterComponent implements OnInit {
   }
 
   onClassChange(value: string) {
-    console.log("on class change " + value);
 
     if (value == 'all' || value == '') {
       this.getAllSubjects();
@@ -71,7 +70,6 @@ export class ViewChapterComponent implements OnInit {
   }
 
   onSubjectChange(value: string) {
-    console.log("on subject change " + value);
 
     if (value == 'all' || value == '') {
       this.getAllChapters();
@@ -81,9 +79,10 @@ export class ViewChapterComponent implements OnInit {
   }
 
   getAllClasses(): void {
-    this.classEntityService.getAllClassEntities().subscribe({
+    this.classEntityService.getAllActiveClasses().subscribe({
       next: (data) => {
-        this.classes = data;
+        // Filter out any invalid class objects
+        this.classes = data.filter(classEntity => classEntity && classEntity.name && classEntity.name.trim() !== '');
       },
       error: (error) => {
         console.error('Error fetching classes:', error);
@@ -92,9 +91,10 @@ export class ViewChapterComponent implements OnInit {
   }
 
   getAllSubjects(): void {
-    this.subjectService.getAllSubjects().subscribe({
+    this.subjectService.getAllActiveSubjects().subscribe({
       next: (data) => {
-        this.subjects = data;
+        // Filter out any invalid subject objects
+        this.subjects = data.filter(subjectEntity => subjectEntity && subjectEntity.name && subjectEntity.name.trim() !== '');
       },
       error: (error) => {
         console.error('Error fetching subjects:', error);
@@ -102,31 +102,26 @@ export class ViewChapterComponent implements OnInit {
     });
   }
 
-
   getFilteredSubject(classId: number) {
-    this.subjectService.filterSubjectsByClass(classId).subscribe(
-      data => {
-        this.subjects = data;
+    this.subjectService.getSubjectsByClass(classId).subscribe({
+      next: (data) => {
+        // Filter out any invalid subject objects
+        this.subjects = data.filter(subjectEntity => subjectEntity && subjectEntity.name && subjectEntity.name.trim() !== '');
       },
-      error => {
-        console.error('Error fetching classes:', error);
+      error: (error) => {
+        console.error('Error fetching filtered subjects:', error);
       }
-    );
+    });
   }
 
   getFilteredChapter(subjectId: number, classId: number) {
-    this.chapterService.filterChapters(subjectId, classId).subscribe(
-      data => {
-        console.log("class id " + classId);
-        console.log("subject id" + subjectId);
-
-        console.log(data);
-
+    this.chapterService.filterChapters(subjectId, classId).subscribe({
+      next: (data) => {
         this.chapters = data;
       },
-      error => {
-        console.error('Error fetching classes:', error);
+      error: (error) => {
+        console.error('Error fetching filtered chapters:', error);
       }
-    );
+    });
   }
 }

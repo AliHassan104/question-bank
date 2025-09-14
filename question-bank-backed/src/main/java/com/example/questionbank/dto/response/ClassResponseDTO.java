@@ -18,6 +18,12 @@ import lombok.NoArgsConstructor;
 public class ClassResponseDTO extends BaseDTO {
 
     @ApiModelProperty(
+            value = "Class ID",
+            example = "1"
+    )
+    private Long id;
+
+    @ApiModelProperty(
             value = "Class name",
             example = "Grade 10"
     )

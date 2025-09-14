@@ -6,28 +6,70 @@
                     <h3>{{ editingSubject ? 'Edit' : 'Add' }} Subject</h3>
                 </div>
                 <div class="card-body">
+                    <!-- Success Message -->
+                    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fa fa-check-circle me-2"></i>
+                        {{ successMessage }}
+                        <button type="button" class="btn-close" (click)="clearSuccess()"></button>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2"></i>
+                        {{ errorMessage }}
+                        <button type="button" class="btn-close" (click)="clearError()">X</button>
+                    </div>
+
                     <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" formControlName="name" class="form-control"
-                                placeholder="Enter name" />
+                            <label for="name">Subject Name <span class="text-danger">*</span></label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                formControlName="name" 
+                                class="form-control"
+                                [class.is-invalid]="submitted && f.name.errors"
+                                placeholder="Enter subject name" />
+                            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                <div *ngIf="f.name.errors['required']">Subject name is required</div>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="dropdown">Select Class</label>
-                            <select id="dropdown" formControlName="class" class="form-control">
+                            <label for="description">Description (Optional)</label>
+                            <textarea 
+                                id="description" 
+                                formControlName="description" 
+                                class="form-control" 
+                                rows="3" 
+                                placeholder="Enter subject description">
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dropdown">Select Class <span class="text-danger">*</span></label>
+                            <select 
+                                id="dropdown" 
+                                formControlName="class" 
+                                class="form-control"
+                                [class.is-invalid]="submitted && f.class.errors">
                                 <option value="" disabled>Select a Class</option>
                                 <option *ngFor="let class of classes" [value]="class.id">
                                     {{ class.name }}
                                 </option>
                             </select>
+                            <div *ngIf="submitted && f.class.errors" class="invalid-feedback">
+                                <div *ngIf="f.class.errors['required']">Please select a class</div>
+                            </div>
                         </div>
 
-
-                        <button type="submit" class="btn btn-primary btn-block" [disabled]="subjectForm.invalid">
-                            {{ editingSubject ? 'Update' : 'Add' }}
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary btn-block" 
+                            [disabled]="loading">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ loading ? 'Processing...' : (editingSubject ? 'Update' : 'Add') }}
                         </button>
-
                     </form>
                 </div>
             </div>

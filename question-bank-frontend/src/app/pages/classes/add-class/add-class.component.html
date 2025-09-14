@@ -1,22 +1,107 @@
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{{ editingClass ? 'Edit' : 'Add' }} Class</h3>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="classEntityForm" (ngSubmit)="onSubmit()">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" formControlName="name" class="form-control"
-                                placeholder="Enter name" />
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block" [disabled]="classEntityForm.invalid">{{
-                            editingClass ? 'Update' : 'Add' }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">
+      {{ editingClass ? 'Edit Class' : 'Add New Class' }}
+    </h5>
+  </div>
+  
+  <div class="card-body">
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="fa fa-check-circle me-2"></i>
+      {{ successMessage }}
+      <button type="button" class="btn-close" (click)="clearSuccess()"></button>
     </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fa fa-exclamation-triangle me-2"></i>
+      {{ errorMessage }}
+      <button type="button" class="btn-close" (click)="clearError()">X</button>
+    </div>
+
+    <form [formGroup]="classEntityForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <!-- Class Name Field -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="name">
+              Class Name <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="name" 
+              formControlName="name" 
+              class="form-control" 
+              [class.is-invalid]="(name?.invalid && name?.touched) || (submitted && name?.invalid)"
+              placeholder="e.g., Class 10, Grade 5">
+            
+            <!-- Validation Messages -->
+            <div *ngIf="(name?.invalid && name?.touched) || (submitted && name?.invalid)" class="invalid-feedback">
+              <div *ngIf="name?.errors?.['required']">Class name is required</div>
+              <div *ngIf="name?.errors?.['minlength']">Class name must be at least 1 character</div>
+              <div *ngIf="name?.errors?.['maxlength']">Class name must not exceed 100 characters</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="description">
+              Description <span class="text-muted">(Optional)</span>
+            </label>
+            <input 
+              type="text" 
+              id="description" 
+              formControlName="description" 
+              class="form-control" 
+              [class.is-invalid]="(description?.invalid && description?.touched) || (submitted && description?.invalid)"
+              placeholder="Optional description for this class">
+            
+            <!-- Validation Messages -->
+            <div *ngIf="(description?.invalid && description?.touched) || (submitted && description?.invalid)" class="invalid-feedback">
+              <div *ngIf="description?.errors?.['maxlength']">Description must not exceed 500 characters</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group mb-0">
+            <button 
+              type="submit" 
+              [disabled]="loading" 
+              class="btn btn-primary">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              <i class="fa fa-save" *ngIf="!loading"></i>
+              {{ loading ? 'Processing...' : (editingClass ? 'Update Class' : 'Create Class') }}
+            </button>
+            
+            <button 
+              type="button" 
+              (click)="resetEditing.emit()" 
+              class="btn btn-secondary ml-2"
+              [disabled]="loading"
+              *ngIf="editingClass">
+              <i class="fa fa-times"></i>
+              Cancel
+            </button>
+            
+            <button 
+              type="button" 
+              (click)="classEntityForm.reset();" 
+              (click)="clearError();" 
+              class="btn btn-outline-secondary ml-2"
+              [disabled]="loading">
+              <i class="fa fa-refresh"></i>
+              Clear Form
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

@@ -50,9 +50,10 @@ export class ViewSubjectComponent implements OnInit {
   }
 
   getAllSubjects() {
-    this.subjectService.getAllSubjects().subscribe(
+    this.subjectService.getAllActiveSubjects().subscribe(
       data => {
         this.subjects = data;
+        
       },
       error => {
         console.error('Error fetching subjects:', error);
@@ -61,7 +62,7 @@ export class ViewSubjectComponent implements OnInit {
   }
 
   getAllClasses() {
-    this.classEntityService.getAllClassEntities().subscribe(
+    this.classEntityService.getAllActiveClasses().subscribe(
       data => {
         this.classes = data;
       },
@@ -72,7 +73,7 @@ export class ViewSubjectComponent implements OnInit {
   }
 
   getFilteredSubject(classId: number) {
-    this.subjectService.filterSubjectsByClass(classId).subscribe(
+    this.subjectService.getSubjectsByClass(classId).subscribe(
       data => {
         this.subjects = data;
       },

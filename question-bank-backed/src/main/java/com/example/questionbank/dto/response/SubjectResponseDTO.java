@@ -13,6 +13,9 @@ import lombok.*;
 @ApiModel(description = "Response DTO for subject information")
 public class SubjectResponseDTO extends BaseDTO {
 
+    @ApiModelProperty(value = "Subject ID")
+    private Long id;
+
     @ApiModelProperty(value = "Subject name")
     private String name;
 

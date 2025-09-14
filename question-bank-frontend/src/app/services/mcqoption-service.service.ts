@@ -20,9 +20,7 @@ export class MCQOptionService {
   }
 
   createMultipleMCQOptions(mcqOptions: MCQOption[]): Observable<MCQOption[]> {
-    console.log(mcqOptions);
     const url = `${this.apiUrl}/multiple`; // Adjust based on your API endpoint
-    console.log(url);
     return this.http.post<MCQOption[]>(url, mcqOptions);
   }
 

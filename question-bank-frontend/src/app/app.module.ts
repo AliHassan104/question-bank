@@ -27,7 +27,9 @@ import { AddQuestionComponent } from './pages/question/add-question/add-question
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-paper.component';
-
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-pa
     ViewQuestionComponent,
     AddQuestionComponent,
     GeneratePaperComponent,
+    LoginComponent,
 
   ],
   imports: [
@@ -63,7 +66,13 @@ import { GeneratePaperComponent } from './pages/paper/generate-paper/generate-pa
     FormsModule 
 
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

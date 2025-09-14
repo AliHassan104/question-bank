@@ -16,7 +16,6 @@
                         </option>
                     </select>
                 </div>
-
             </div>
 
             <div class="card-body">
@@ -26,30 +25,57 @@
                             <tr>
                                 <th>S. No</th>
                                 <th>Name</th>
+                                <th>Description</th>
                                 <th>Class</th>
+                                <th>Status</th>
+                                <th>Chapters</th>
                                 <th class="text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let subject of subjects; let i = index">
-                                <td>{{ i + 1 }}</td> <!-- Serial number -->
-                                <td>{{ subject.name }}</td> <!-- Subject name -->
-                                <td>{{ subject.classEntity.name }}</td> <!-- Class name -->
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ subject.name }}</td>
+                                <td>{{ subject.description || 'N/A' }}</td>
+                                <td>{{ subject.classInfo?.name || 'N/A' }}</td>
+                                <td>
+                                    <span class="badge" 
+                                          [ngClass]="subject.isActive ? 'badge-success' : 'badge-danger'">
+                                        {{ subject.isActive ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        {{ subject.chapterCount || 0 }}
+                                    </span>
+                                </td>
                                 <td class="text-right">
                                     <button [routerLink]="['/subject/',subject.id]"
-                                        class="btn btn-primary btn-round">Generate</button>
+                                            class="btn btn-primary btn-round btn-sm">
+                                        <i class="fa fa-file-alt"></i> Generate
+                                    </button>
                                     <button (click)="editSubject(subject)"
-                                        class="btn btn-warning btn-round">Edit</button>
+                                            class="btn btn-warning btn-round btn-sm ml-1">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
                                     <button (click)="deleteSubject(subject)"
-                                        class="btn btn-danger btn-round">Delete</button>
+                                            class="btn btn-danger btn-round btn-sm ml-1"
+                                            [disabled]="subject.chapterCount > 0">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    
+                    <!-- Empty state -->
+                    <div *ngIf="subjects.length === 0" class="text-center py-4">
+                        <i class="fa fa-book fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No subjects found</h5>
+                        <p class="text-muted">Add a new subject to get started.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Add subject form component with event handling -->

@@ -22,6 +22,12 @@ import java.util.List;
 @ApiModel(description = "Response DTO for question information")
 public class QuestionResponseDTO extends BaseDTO {
 
+    @ApiModelProperty(
+            value = "Question ID",
+            example = "1"
+    )
+    private Long id;
+
     @ApiModelProperty(value = "Question text")
     private String questionText;
 

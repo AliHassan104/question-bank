@@ -14,6 +14,9 @@ import lombok.*;
 @ApiModel(description = "Response DTO for chapter information")
 public class ChapterResponseDTO extends BaseDTO {
 
+    @ApiModelProperty(value = "Chapter ID")
+    private Long id;
+
     @ApiModelProperty(value = "Chapter name")
     private String name;
 

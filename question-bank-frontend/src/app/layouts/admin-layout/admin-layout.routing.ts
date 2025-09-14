@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '../../guards/auth.guard';
 
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
 import { UserComponent } from '../../pages/user/user.component';
@@ -15,20 +16,11 @@ import { QuestionComponent } from 'app/pages/question/question.component';
 import { GeneratePaperComponent } from 'app/pages/paper/generate-paper/generate-paper.component';
 
 export const AdminLayoutRoutes: Routes = [
-    // { path: 'dashboard',      component: DashboardComponent },
-    // { path: 'user',           component: UserComponent },
-    //{ path: 'table',          component: TableComponent },
-    // { path: 'typography',     component: TypographyComponent },
-    //{ path: 'icons',          component: IconsComponent },
-    // { path: 'maps',           component: MapsComponent },
-    // { path: 'notifications',  component: NotificationsComponent },
-    // { path: 'upgrade',        component: UpgradeComponent },
-
-    { path: 'class',        component: ClassesComponent },
-    { path: 'subject',        component: SubjectComponent },
-    { path: 'subject/:id',        component:  GeneratePaperComponent},
-    { path: 'chapter',        component: ChapterComponent },
-    { path: 'question',        component: QuestionComponent },
-    { path: 'generate-paper',        component: QuestionComponent },
-
+    { path: '', redirectTo: 'class', pathMatch: 'full' },
+    { path: 'class', component: ClassesComponent, canActivate: [AuthGuard] },
+    { path: 'subject', component: SubjectComponent, canActivate: [AuthGuard] },
+    { path: 'subject/:id', component: GeneratePaperComponent, canActivate: [AuthGuard] },
+    { path: 'chapter', component: ChapterComponent, canActivate: [AuthGuard] },
+    { path: 'question', component: QuestionComponent, canActivate: [AuthGuard] },
+    { path: 'generate-paper', component: GeneratePaperComponent, canActivate: [AuthGuard] },
 ];

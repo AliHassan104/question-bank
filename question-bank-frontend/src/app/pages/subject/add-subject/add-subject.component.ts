@@ -1,16 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClassEntity } from 'app/models/class-entities.model';
-import { Subject } from 'app/models/subject.model';
+import { Subject, CreateSubjectRequest, UpdateSubjectRequest } from 'app/models/subject.model';
 import { ClassEntityService } from 'app/services/class-entity.service';
 import { SubjectService } from 'app/services/subject.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-subject',
   templateUrl: './add-subject.component.html',
   styleUrls: ['./add-subject.component.scss']
 })
-export class AddSubjectComponent implements OnInit {
+export class AddSubjectComponent implements OnInit, OnChanges {
   subjectForm: FormGroup;
 
   @Input() editingSubject: Subject | null = null;
@@ -18,6 +19,12 @@ export class AddSubjectComponent implements OnInit {
   @Output() resetEditing = new EventEmitter<void>();
 
   classes: ClassEntity[] = [];
+  
+  // Error handling properties
+  errorMessage: string = '';
+  successMessage: string = '';
+  submitted: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,13 +37,15 @@ export class AddSubjectComponent implements OnInit {
 
     this.subjectForm = this.fb.group({
       name: ['', Validators.required],
+      description: [''],
       class: ['', Validators.required],
     });
 
     if (this.editingSubject) {
       this.subjectForm.patchValue({
         name: this.editingSubject.name,
-        class: this.editingSubject.classEntity?.id,
+        description: this.editingSubject.description,
+        class: this.editingSubject.classInfo?.id,
       });
     }
   }
@@ -45,66 +54,146 @@ export class AddSubjectComponent implements OnInit {
     if (this.editingSubject) {
       this.subjectForm.patchValue({
         name: this.editingSubject.name,
-        class: this.editingSubject.classEntity?.id,
+        description: this.editingSubject.description,
+        class: this.editingSubject.classInfo?.id,
       });
     } else {
       if (this.subjectForm) {
-        this.subjectForm.reset(); // Ensure form is initialized
+        this.subjectForm.reset();
       }
     }
+    // Clear messages when switching between edit/add modes
+    this.clearMessages();
+  }
+
+  // Getter for easy access to form controls
+  get f() { 
+    return this.subjectForm.controls; 
   }
 
   onSubmit() {
-    if (this.subjectForm.valid) {
-      const newSubjectEntity: Subject = {
-        name: this.subjectForm.value.name,
-        classEntity: {
-          id: this.subjectForm.value.class,
-          name: ''
-        }
-      };
+    this.submitted = true;
+    this.clearMessages();
 
+    if (this.subjectForm.valid) {
+      this.loading = true;
+      
       if (this.editingSubject) {
-        this.updateSubjectEntity(this.editingSubject.id, newSubjectEntity);
+        const updateRequest: UpdateSubjectRequest = {
+          name: this.subjectForm.value.name,
+          description: this.subjectForm.value.description,
+          classId: parseInt(this.subjectForm.value.class),
+          isActive: this.editingSubject.isActive
+        };
+        this.updateSubjectEntity(this.editingSubject.id, updateRequest);
       } else {
-        this.createSubjectEntity(newSubjectEntity);
+        const createRequest: CreateSubjectRequest = {
+          name: this.subjectForm.value.name,
+          description: this.subjectForm.value.description,
+          classId: parseInt(this.subjectForm.value.class)
+        };
+        this.createSubjectEntity(createRequest);
       }
     }
   }
 
   getAllClasses(page: number, size: number) {
-    this.classEntityService.getAllClassEntities().subscribe(
-      data => {
+    this.classEntityService.getAllActiveClasses().subscribe({
+      next: (data) => {
         this.classes = data;
       },
-      error => {
+      error: (error) => {
         console.error('Error fetching classes:', error);
+        this.errorMessage = 'Failed to load classes. Please try again.';
       }
-    );
+    });
   }
 
-  createSubjectEntity(subject: Subject) {
-    this.subjectService.createSubject(subject).subscribe(
-      () => {
+  createSubjectEntity(subject: CreateSubjectRequest) {
+    this.subjectService.createSubject(subject).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.submitted = false;
+        this.successMessage = 'Subject created successfully!';
         this.subjectUpdated.emit();
         this.subjectForm.reset();
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
       },
-      error => {
-        console.error('Error creating subject:', error);
+      error: (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.handleError(error);
       }
-    );
+    });
   }
 
-  updateSubjectEntity(id: number, subject: Subject) {
-    this.subjectService.updateSubject(id, subject).subscribe(
-      () => {
-        this.subjectUpdated.emit(); // Notify parent to refresh list
-        this.resetEditing.emit();   // Notify parent to stop editing
-        this.subjectForm.reset();   // Reset form to add mode
+  updateSubjectEntity(id: number, subject: UpdateSubjectRequest) {
+    this.subjectService.updateSubject(id, subject).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.submitted = false;
+        this.successMessage = 'Subject updated successfully!';
+        this.subjectUpdated.emit();
+        this.resetEditing.emit();
+        this.subjectForm.reset();
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
       },
-      error => {
-        console.error('Error updating subject:', error);
+      error: (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.handleError(error);
       }
-    );
+    });
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.error('HTTP Error:', error);
+    
+    if (error.status === 409) {
+      // Handle duplicate resource error
+      if (error.error && error.error.message) {
+        this.errorMessage = error.error.message;
+      } else {
+        this.errorMessage = 'A subject with this name already exists in the selected class.';
+      }
+    } else if (error.status === 400) {
+      // Handle validation errors
+      if (error.error && error.error.fieldErrors) {
+        this.errorMessage = error.error.fieldErrors
+          .map((fieldError: any) => fieldError.message)
+          .join(', ');
+      } else if (error.error && error.error.message) {
+        this.errorMessage = error.error.message;
+      } else {
+        this.errorMessage = 'Invalid data provided. Please check your input.';
+      }
+    } else if (error.status === 0) {
+      // Network error
+      this.errorMessage = 'Unable to connect to server. Please check your internet connection.';
+    } else {
+      // Generic error
+      this.errorMessage = error.error?.message || 'An unexpected error occurred. Please try again.';
+    }
+  }
+
+  private clearMessages() {
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  // Method to manually clear error message
+  clearError() {
+    this.errorMessage = '';
+  }
+
+  // Method to manually clear success message
+  clearSuccess() {
+    this.successMessage = '';
   }
 }

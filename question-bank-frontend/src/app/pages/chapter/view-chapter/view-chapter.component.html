@@ -15,8 +15,8 @@
                     <div class="form-group mb-0">
                         <select #classDropdown (change)="onClassChange(classDropdown.value)" class="form-control">
                             <option value="all" selected>All</option>
-                            <option *ngFor="let class of classes" [value]="class.id">
-                                {{ class.name }}
+                            <option *ngFor="let classEntity of classes" [value]="classEntity.id">
+                                {{ classEntity?.name || 'Unnamed Class' }}
                             </option>
                         </select>
                     </div>
@@ -24,8 +24,8 @@
                     <div class="form-group mb-0">
                         <select #subjectDropdown (change)="onSubjectChange(subjectDropdown.value)" class="form-control">
                             <option value="all" selected>All</option>
-                            <option *ngFor="let subject of subjects" [value]="subject.id">
-                                {{ subject.name }} - {{subject.classEntity.name}}
+                            <option *ngFor="let subjectEntity of subjects" [value]="subjectEntity.id">
+                                {{ subjectEntity?.name || 'Unnamed Subject' }} - {{ subjectEntity?.classInfo?.name || 'No Class' }}
                             </option>
                         </select>
                     </div>
@@ -41,15 +41,22 @@
                                 <th>Name</th>
                                 <th>Subject</th>
                                 <th>Class</th>
+                                <th>Status</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let chapter of chapters; let i = index">
                                 <td>{{ i + 1 }}</td>
-                                <td>{{ chapter.name }}</td>
-                                <td>{{ chapter.subject.name }}</td>
-                                <td>{{ chapter.subject.classEntity.name }}</td>
+                                <td>{{ chapter?.name || 'Unnamed Chapter' }}</td>
+                                <td>{{ chapter?.subjectInfo?.name || 'No Subject' }}</td>
+                                <td>{{ chapter?.subjectInfo?.classInfo?.name || 'No Class' }}</td>
+                                <td>
+                                    <span class="badge" 
+                                          [ngClass]="chapter.isActive ? 'badge-success' : 'badge-danger'">
+                                        {{ chapter.isActive ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
                                 <td class="text-right">
                                     <button (click)="editChapter(chapter)"
                                         class="btn btn-primary btn-round">Edit</button>

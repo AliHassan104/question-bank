@@ -14,7 +14,7 @@
                     <div class="form-group mb-0">
                         <select #sectionTypeDropdown (change)="onSectionTypeChange(sectionTypeDropdown.value)"
                             class="form-control">
-                            <option value="" selected>All</option>
+                            <option value="" selected>All Sections</option>
                             <option value="MCQ">MCQs</option>
                             <option value="SHORT_QUESTION">Short</option>
                             <option value="LONG_QUESTION">Long</option>
@@ -24,7 +24,7 @@
                     <!-- Class Dropdown -->
                     <div class="form-group mb-0">
                         <select #classDropdown (change)="onClassChange(classDropdown.value)" class="form-control">
-                            <option value="" selected>All</option>
+                            <option value="" selected>All Classes</option>
                             <option *ngFor="let class of classes" [value]="class.id">
                                 {{ class.name }}
                             </option>
@@ -34,9 +34,9 @@
                     <!-- Subject Dropdown -->
                     <div class="form-group mb-0">
                         <select #subjectDropdown (change)="onSubjectChange(subjectDropdown.value)" class="form-control">
-                            <option value="" selected>All</option>
+                            <option value="" selected>All Subjects</option>
                             <option *ngFor="let subject of subjects" [value]="subject.id">
-                                {{ subject.name }} - {{ subject.classEntity.name }}
+                                {{ subject.name }} - {{ subject.classEntity?.name || subject.classInfo?.name }}
                             </option>
                         </select>
                     </div>
@@ -44,10 +44,10 @@
                     <!-- Chapter Dropdown -->
                     <div class="form-group mb-0">
                         <select #chapterDropdown (change)="onChapterChange(chapterDropdown.value)" class="form-control">
-                            <option value="" selected>All</option>
+                            <option value="" selected>All Chapters</option>
                             <option *ngFor="let chapter of chapters" [value]="chapter.id">
-                                {{ chapter.name }} - {{ chapter.subject.name }} -
-                                {{ chapter.subject.classEntity.name }}
+                                {{ chapter.name }} - {{ chapter.subjectInfo.name }} -
+                                {{ chapter.subjectInfo.classEntity?.name || chapter.subjectInfo.classInfo?.name }}
                             </option>
                         </select>
                     </div>
@@ -61,64 +61,66 @@
                             <tr>
                                 <th>S. No</th>
                                 <th>Question</th>
-                                <th>Section</th>
-                                <th>Class</th>
-                                <th>Subject</th>
                                 <th>Chapter</th>
                                 <th class="text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let question of questions; let i = index"
-                                [style.backgroundColor]="question.addedToPaper ? '#dff0d8' : 'transparent'">
+                                [style.backgroundColor]="question.isAddedToPaper ? '#dff0d8' : 'transparent'">
 
                                 <td>{{ i + 1 }}</td>
-                                <td class="large-question-text">{{ question.questionText }}
-                                    <div *ngIf="question.sectionType === 'MCQ'">
-                                <td>
-                                    <div *ngIf="mcqOptions[question.id]?.length; else noOptions">
-                                        <strong>Options:</strong>
-                                        <ul>
-                                            <li *ngFor="let option of mcqOptions[question.id]">
-                                                {{ option.optionText }} {{ option.correct ? '(Correct)' : '' }}
-                                            </li>
-                                        </ul>
+                                <td class="large-question-text">
+                                    {{ question.questionText }}
+
+                                    <!-- MCQ Options Display -->
+                                    <div *ngIf="question.sectionType === 'MCQ'" class="mt-2">
+                                        <div *ngIf="mcqOptions[question.id]?.length; else noOptions">
+                                            <strong>Options:</strong>
+                                            <ul class="mt-1">
+                                                <li *ngFor="let option of mcqOptions[question.id]">
+                                                    {{ option.optionText }}
+                                                    <span *ngIf="option.isCorrect" class="text-success">(Correct)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <ng-template #noOptions>
+                                            <em class="text-muted">No options available for this question.</em>
+                                        </ng-template>
                                     </div>
-                                    <ng-template #noOptions>
-                                        <em>No options available for this question.</em>
-                                    </ng-template>
                                 </td>
+
+                                <td>
+                                    <div class="form-group mb-0">
+                                        {{ question.chapterInfo.name }}
+                                        <!--  - {{ question.chapterInfo.subjectInfo.name }} -
+                                        {{ question.chapterInfo.subjectInfo.classEntity?.name ||
+                                        question.chapterInfo.subjectInfo.classInfo?.name }} -->
+                                    </div>
+                                </td>
+                                <!-- <td>{{ chapter?.subjectInfo?.name || 'No Subject' }}</td>
+                                <td>{{ chapter?.subjectInfo?.classInfo?.name || 'No Class' }}</td> -->
+
+                                <td class="text-right">
+                                    <button (click)="addQuestionToPaper(question)" class="btn btn-sm mb-1"
+                                        [class.btn-success]="question.isAddedToPaper"
+                                        [class.btn-primary]="!question.isAddedToPaper">
+                                        {{ question.isAddedToPaper ? 'Remove' : 'Add' }}
+                                    </button>
+                                    <br>
+                                    <button (click)="editQuestion(question)" class="btn btn-warning btn-sm mb-1">
+                                        Edit
+                                    </button>
+                                    <br>
+                                    <button (click)="deleteQuestion(question)" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                </td>
-
-                <!-- </div>
-                </td> -->
-                <td>{{ question.sectionType }}</td>
-                <td>{{ question.chapter.subject.classEntity.name }}</td>
-                <td>{{ question.chapter.subject.name }}</td>
-                <td>{{ question.chapter.name }}</td>
-
-                <td class="text-right">
-
-                    <button (click)="addQuestionToPaper(question)" class="btn btn-primary btn-round">
-                        Add
-                    </button>
-                    <br>
-                    <br>
-                    <button (click)="editQuestion(question)" class="btn btn-warning btn-round">
-                        Edit
-                    </button>
-                    <br>
-                    <br>
-                    <button (click)="deleteQuestion(question)" class="btn btn-danger btn-round">
-                        Delete
-                    </button>
-                </td>
-                </tr>
-                </tbody>
-                </table>
             </div>
         </div>
     </div>
-</div>
 </div>

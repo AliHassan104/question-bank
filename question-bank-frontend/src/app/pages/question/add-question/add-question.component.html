@@ -1,79 +1,207 @@
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3>{{ editingQuestion ? 'Edit' : 'Add' }} Question</h3>
                 </div>
                 <div class="card-body">
+                    <!-- Success Message -->
+                    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fa fa-check-circle me-2"></i>
+                        {{ successMessage }}
+                        <button type="button" class="btn-close" (click)="clearSuccess()"></button>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2"></i>
+                        {{ errorMessage }}
+                        <button type="button" class="btn-close" (click)="clearError()"></button>
+                    </div>
+
                     <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
 
-                        <!-- Question Name -->
+                        <!-- Question Text -->
                         <div class="form-group">
-                            <label for="name">Question</label>
-                            <input type="text" id="name" formControlName="name" class="form-control"
-                                placeholder="Enter question" />
+                            <label for="name">Question Text <span class="text-danger">*</span></label>
+                            <textarea 
+                                id="name" 
+                                formControlName="name" 
+                                class="form-control" 
+                                rows="2"
+                                [class.is-invalid]="(f.name.invalid && f.name.touched) || (submitted && f.name.invalid)"
+                                placeholder="Enter question text"></textarea>
+                            <div *ngIf="(f.name.invalid && f.name.touched) || (submitted && f.name.invalid)" 
+                                 class="invalid-feedback">
+                                Question text is required
+                            </div>
                         </div>
 
                         <!-- Select Type -->
                         <div class="form-group">
-                            <label for="dropdown">Select Type</label>
-                            <select id="dropdown" formControlName="sectionType" class="form-control">
-                                <option value="" disabled>Select a Type</option>
-                                <option value="MCQ">MCQs</option>
-                                <option value="SHORT_QUESTION">Short</option>
-                                <option value="LONG_QUESTION">Long</option>
+                            <label for="sectionType">Question Type <span class="text-danger">*</span></label>
+                            <select 
+                                id="sectionType" 
+                                formControlName="sectionType" 
+                                class="form-control"
+                                [class.is-invalid]="(f.sectionType.invalid && f.sectionType.touched) || (submitted && f.sectionType.invalid)">
+                                <option value="" disabled>Select question type</option>
+                                <option value="MCQ">Multiple Choice Questions (MCQ)</option>
+                                <option value="SHORT_QUESTION">Short Answer Questions</option>
+                                <option value="LONG_QUESTION">Long Answer Questions</option>
                             </select>
+                            <div *ngIf="(f.sectionType.invalid && f.sectionType.touched) || (submitted && f.sectionType.invalid)" 
+                                 class="invalid-feedback">
+                                Question type is required
+                            </div>
                         </div>
 
-                        <!-- Conditionally show inputs for MCQs -->
+                        <!-- MCQ Options (Conditionally shown) -->
                         <div *ngIf="isMCQSelected" class="form-group">
-                            <label>Options for MCQs</label>
-                            <input type="text" id="option1" formControlName="option1" class="form-control"
-                                placeholder="Enter option 1" />
-                            <br>
-                            <input type="text" id="option2" formControlName="option2" class="form-control"
-                                placeholder="Enter option 2" /> <br>
-                            <input type="text" id="option3" formControlName="option3" class="form-control"
-                                placeholder="Enter option 3" /> <br>
-                            <input type="text" id="option4" formControlName="option4" class="form-control"
-                                placeholder="Enter option 4" /> <br>
+                            <label>MCQ Options <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <input 
+                                        type="text" 
+                                        id="option1" 
+                                        formControlName="option1" 
+                                        class="form-control"
+                                        [class.is-invalid]="(f.option1.invalid && f.option1.touched) || (submitted && f.option1.invalid)"
+                                        placeholder="Option A" />
+                                    <div *ngIf="(f.option1.invalid && f.option1.touched) || (submitted && f.option1.invalid)" 
+                                         class="invalid-feedback">
+                                        Option A is required for MCQ
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <input 
+                                        type="text" 
+                                        id="option2" 
+                                        formControlName="option2" 
+                                        class="form-control"
+                                        [class.is-invalid]="(f.option2.invalid && f.option2.touched) || (submitted && f.option2.invalid)"
+                                        placeholder="Option B" />
+                                    <div *ngIf="(f.option2.invalid && f.option2.touched) || (submitted && f.option2.invalid)" 
+                                         class="invalid-feedback">
+                                        Option B is required for MCQ
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <input 
+                                        type="text" 
+                                        id="option3" 
+                                        formControlName="option3" 
+                                        class="form-control"
+                                        placeholder="Option C (optional)" />
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <input 
+                                        type="text" 
+                                        id="option4" 
+                                        formControlName="option4" 
+                                        class="form-control"
+                                        placeholder="Option D (optional)" />
+                                </div>
+                            </div>
                         </div>
 
+                        <!-- Class Selection -->
                         <div class="form-group">
-                            <label for="dropdown">Select Class</label>
-                            <select #classDropdown (change)="onClassChange(classDropdown.value)" id="dropdown"
-                                formControlName="class" class="form-control">
-                                <option value="all">All</option>
-                                <option *ngFor="let class of classes" value="{{ class.id }}">{{ class.name }}</option>
+                            <label for="classDropdown">Select Class</label>
+                            <select 
+                                id="classDropdown" 
+                                formControlName="class" 
+                                class="form-control"
+                                (change)="onClassChange($event.target.value)">
+                                <option value="">All Classes</option>
+                                <option *ngFor="let class of classes" [value]="class.id">
+                                    {{ class.name }}
+                                </option>
                             </select>
                         </div>
 
-                        <div class="form-group mb-0">
-                            <label for="dropdown">Select Subject</label>
-                            <select #subjectDropdown (change)="onSubjectChange(subjectDropdown.value)"
-                                class="form-control">
-                                <option value="all" selected>Select a Subject</option>
+                        <!-- Subject Selection -->
+                        <div class="form-group">
+                            <label for="subjectDropdown">Select Subject</label>
+                            <select 
+                                id="subjectDropdown" 
+                                formControlName="subject"
+                                class="form-control"
+                                [disabled]="loadingSubjects"
+                                (change)="onSubjectChange($event.target.value)">
+                                <option value="">
+                                    {{ loadingSubjects ? 'Loading subjects...' : 'All Subjects' }}
+                                </option>
                                 <option *ngFor="let subject of subjects" [value]="subject.id">
-                                    {{ subject.name }} - {{subject.classEntity.name}}
+                                    {{ subject.name }} - {{ subject.classEntity?.name || subject.classInfo?.name }}
                                 </option>
                             </select>
+                            
+                            <!-- Loading indicator for subjects -->
+                            <div *ngIf="loadingSubjects" class="d-flex align-items-center mt-1">
+                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                <small class="text-muted">Loading subjects...</small>
+                            </div>
                         </div>
 
+                        <!-- Chapter Selection -->
                         <div class="form-group">
-                            <label for="dropdown">Select Chapter</label>
-                            <select id="dropdown" formControlName="chapter" class="form-control">
-                                <option value="" disabled>Select a Chapter</option>
-                                <option *ngFor="let chapter of chapters" [value]="chapter.id">{{ chapter.name }} -
-                                    {{chapter.subject.name}} - {{chapter.subject.classEntity.name}}
+                            <label for="chapterDropdown">Select Chapter <span class="text-danger">*</span></label>
+                            <select 
+                                id="chapterDropdown" 
+                                formControlName="chapter" 
+                                class="form-control"
+                                [class.is-invalid]="shouldShowChapterError()"
+                                [disabled]="loadingChapters">
+                                <option value="" disabled>
+                                    {{ loadingChapters ? 'Loading chapters...' : 'Select a chapter' }}
+                                </option>
+                                <option *ngFor="let chapter of chapters" [value]="chapter.id">
+                                    {{ chapter.name }} - {{ chapter.subjectInfo.name }} -
+                                    {{ chapter.subjectInfo.classEntity?.name || chapter.subjectInfo.classInfo?.name }}
                                 </option>
                             </select>
+                            
+                            <!-- Loading indicator for chapters -->
+                            <div *ngIf="loadingChapters" class="d-flex align-items-center mt-1">
+                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                <small class="text-muted">Loading chapters...</small>
+                            </div>
+                            
+                            <!-- FIXED: Chapter validation error -->
+                            <div *ngIf="shouldShowChapterError()" class="invalid-feedback">
+                                Chapter selection is required
+                            </div>
+                            
+                            <!-- No chapters available message -->
+                            <div *ngIf="!loadingChapters && chapters.length === 0 && (questionForm.get('subject')?.value || questionForm.get('class')?.value)" 
+                                 class="text-muted small mt-1">
+                                No chapters available for the selected filters. Try selecting a different class or subject.
+                            </div>
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary btn-block" [disabled]="questionForm.invalid">
-                            {{ editingQuestion ? 'Update' : 'Add' }}
-                        </button>
+                        <div class="form-group">
+                            <button 
+                                type="submit" 
+                                class="btn btn-primary btn-block" 
+                                [disabled]="loading || questionForm.invalid">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                                <i class="fa fa-save" *ngIf="!loading"></i>
+                                {{ loading ? 'Processing...' : (editingQuestion ? 'Update Question' : 'Add Question') }}
+                            </button>
+                            
+                            <button 
+                                *ngIf="editingQuestion" 
+                                type="button" 
+                                class="btn btn-secondary btn-block mt-2" 
+                                [disabled]="loading"
+                                (click)="resetEditing.emit()">
+                                <i class="fa fa-times"></i>
+                                Cancel Edit
+                            </button>
+                        </div>
 
                     </form>
                 </div>

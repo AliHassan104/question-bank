@@ -32,15 +32,20 @@ public class CorrectedDatabaseInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        log.info("Starting corrected database initialization...");
+        log.info("Starting database initialization check...");
 
-        // Only initialize if database is empty
-        if (userRepository.count() > 0) {
+        // SIMPLE CHECK - Only run if database is completely empty
+        if (userRepository.count() > 0 ||
+                roleRepository.count() > 0 ||
+                permissionRepository.count() > 0 ||
+                questionRepository.count() > 0) {
             log.info("Database already contains data. Skipping initialization.");
             return;
         }
 
         try {
+            log.info("Database is empty. Running initialization...");
+
             initializePermissions();
             initializeRoles();
             initializeUsers();
@@ -56,6 +61,7 @@ public class CorrectedDatabaseInitializer implements CommandLineRunner {
         }
     }
 
+    // Keep all your existing methods exactly as they are...
     private void initializePermissions() {
         log.info("Initializing permissions...");
 
@@ -325,12 +331,12 @@ public class CorrectedDatabaseInitializer implements CommandLineRunner {
         createMCQOption(savedGeometryQ, "49 cm²", false, 3);
         createMCQOption(savedGeometryQ, "98π cm²", false, 4);
 
-        // Physics Short Question (Use SHORT_ANSWER instead of DESCRIPTIVE)
+        // Physics Short Question
         Question physicsQuestion = Question.builder()
                 .questionText("State Newton's First Law of Motion.")
                 .explanation("An object at rest stays at rest and an object in motion stays in motion unless acted upon by an external force.")
                 .sectionType(SectionType.SHORT_QUESTION)
-                .questionType(QuestionType.SHORT_ANSWER)  // Changed from DESCRIPTIVE
+                .questionType(QuestionType.SHORT_ANSWER)
                 .difficultyLevel(DifficultyLevel.EASY)
                 .marks(3.0)
                 .negativeMarks(0.0)

@@ -34,4 +34,5 @@ public interface ClassMapper {
     @Mapping(target = "subjects", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDTO(UpdateClassRequestDTO dto, @MappingTarget ClassEntity entity);
+
 }

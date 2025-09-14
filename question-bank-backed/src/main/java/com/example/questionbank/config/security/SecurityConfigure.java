@@ -58,6 +58,53 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                // Enable CORS with our secure configuration
+//                .cors().configurationSource(corsConfigurationSource)
+//                .and()
+//
+//                // Disable CSRF for stateless API
+//                .csrf().disable()
+//
+//                // Configure authorization
+//                .authorizeRequests()
+//                .antMatchers(PUBLIC_URLS).permitAll()  // ✅ Allow these without authentication
+//                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ Allow preflight requests
+//                .antMatchers(HttpMethod.GET, "/api/*/search").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN", "TEACHER")
+//                .antMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("ADMIN", "TEACHER")
+//                .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+//                .anyRequest().authenticated()
+//                .and()
+//
+//                // Configure exception handling
+//                .exceptionHandling()
+//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                .and()
+//
+//                // Stateless session management
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//
+//                // Security headers
+//                .headers()
+//                .frameOptions().deny()
+//                .contentTypeOptions().and()
+//                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+//                        .maxAgeInSeconds(31536000)
+//                        .includeSubDomains(true))
+//                .and();
+//
+//        // Add JWT filter
+//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//    }
+
+    // Update your SecurityConfigure.java configure method with this fix:
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -70,13 +117,27 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 
                 // Configure authorization
                 .authorizeRequests()
-                .antMatchers(PUBLIC_URLS).permitAll()  // ✅ Allow these without authentication
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ Allow preflight requests
-                .antMatchers(HttpMethod.GET, "/api/*/search").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN", "TEACHER")
-                .antMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("ADMIN", "TEACHER")
-                .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                .antMatchers(PUBLIC_URLS).permitAll()  // Allow these without authentication
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow preflight requests
+
+                // FIX: Update these lines to match your role structure
+                // Your security expects hasRole('USER') which looks for 'ROLE_USER'
+                // But your database has 'ADMIN', 'TEACHER', 'STUDENT'
+
+                // Option 1: Use hasAuthority instead of hasRole (recommended quick fix)
+                .antMatchers(HttpMethod.GET, "/api/*/search").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")
+                .antMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")
+                .antMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
+                .antMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
+                .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ROLE_ADMIN")
+
+                // Option 2: Use hasRole but update to match your actual role names
+                // .antMatchers(HttpMethod.GET, "/api/*/search").hasAnyRole("ADMIN", "TEACHER", "STUDENT")
+                // .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "TEACHER", "STUDENT")
+                // .antMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN", "TEACHER")
+                // .antMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("ADMIN", "TEACHER")
+                // .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+
                 .anyRequest().authenticated()
                 .and()
 

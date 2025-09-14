@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Subject } from '../models/subject.model'; // Adjust the path based on your folder structure
-import { Page } from '../models/page.model'; // For pagination model
-import { environment } from '../../environments/environment'; // For base API URL
+import { Subject, CreateSubjectRequest, UpdateSubjectRequest } from '../models/subject.model';
+import { Page } from '../models/page.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +14,13 @@ export class SubjectService {
 
   constructor(private http: HttpClient) { }
 
-  // Create a new Subject
-  createSubject(subject: Subject): Observable<Subject> {
+  // Create a new Subject - takes CreateSubjectRequest, returns Subject
+  createSubject(subject: CreateSubjectRequest): Observable<Subject> {
     return this.http.post<Subject>(this.apiUrl, subject);
   }
 
-  // Update a Subject by ID
-  updateSubject(id: number, subject: Subject): Observable<Subject> {
+  // Update a Subject by ID - takes UpdateSubjectRequest, returns Subject
+  updateSubject(id: number, subject: UpdateSubjectRequest): Observable<Subject> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.put<Subject>(url, subject);
   }
@@ -37,12 +37,17 @@ export class SubjectService {
     return this.http.get<Subject>(url);
   }
 
-  // Get all Subjects with pagination
+  // Get all Subjects
+  
   getAllSubjects(): Observable<Subject[]> {
     return this.http.get<Subject[]>(this.apiUrl);
-    // return this.http.get<Page<Subject>>(this.apiUrl, { params });
   }
-
+  // Get all active Subjects
+  
+  getAllActiveSubjects(): Observable<Subject[]> {
+    const url = `${this.apiUrl}/active`;
+    return this.http.get<Subject[]>(url);
+  }
   // Search Subjects by name with pagination
   searchSubjects(name: string, page: number, size: number): Observable<Page<Subject>> {
     const params = new HttpParams()
@@ -53,12 +58,23 @@ export class SubjectService {
     return this.http.get<Page<Subject>>(url, { params });
   }
 
+  // filterSubjectsByClass(classId: number): Observable<Subject[]> {
+  //   const params = new HttpParams().set('classId', classId.toString());
+  //   const url = `${this.apiUrl}/class`;
+  //   return this.http.get<Subject[]>(url, { params });
+  // }
 
-  filterSubjectsByClass(classId: number): Observable<Subject[]> {
-    const params = new HttpParams().set('classId', classId.toString());
-    const url = `${this.apiUrl}/filter-by-class`;
-    return this.http.get<Subject[]>(url, { params });
+  // Get subjects by class ID - CORRECTED URL
+  getSubjectsByClass(classId: number): Observable<Subject[]> {
+    const url = `${this.apiUrl}/class/${classId}`; // Using path variable
+    return this.http.get<Subject[]>(url).pipe(
+    );
   }
 
-
+  // Alternative method using query parameter
+  // getSubjectsByClassQuery(classId: number): Observable<Subject[]> {
+  //   const url = `${this.apiUrl}/class?classId=${classId}`; // Using query parameter
+  //   return this.http.get<Subject[]>(url).pipe(
+  //   );
+  // }
 }
