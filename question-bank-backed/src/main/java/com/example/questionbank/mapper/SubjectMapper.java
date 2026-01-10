@@ -11,7 +11,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
-
 @Mapper(componentModel = "spring", uses = {ClassMapper.class})
 public interface SubjectMapper {
 
@@ -23,16 +22,14 @@ public interface SubjectMapper {
 
     List<SubjectResponseDTO> toResponseDTOList(List<Subject> entities);
 
-    @Mapping(target = "classInfo", source = "classEntity")
-    SubjectSummaryDTO toSummaryDTO(Subject entity);
-
     List<SubjectSummaryDTO> toSummaryDTOList(List<Subject> entities);
 
-    // The update method
     @Mapping(target = "classEntity", source = "classId")
     void updateEntityFromDTO(UpdateSubjectRequestDTO dto, @MappingTarget Subject entity);
 
-    // Custom mapping method to convert Long classId to ClassEntity
+    @Mapping(target = "classInfo", source = "classEntity")
+    SubjectSummaryDTO toSummaryDTO(Subject entity);
+
     default ClassEntity mapClassId(Long classId) {
         if (classId == null) {
             return null;

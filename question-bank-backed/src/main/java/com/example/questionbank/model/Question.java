@@ -82,7 +82,7 @@ public class Question extends BaseEntity {
     @Column(name = "time_limit_seconds")
     private Integer timeLimitSeconds;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chapter_id", nullable = false)
     @NotNull(message = "Chapter is required")
     private Chapter chapter;

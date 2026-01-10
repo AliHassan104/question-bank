@@ -68,7 +68,7 @@ export class ViewQuestionComponent implements OnInit {
   }
 
   getAllQuestions(page: number, size: number) {
-    this.questionService.getAllQuestions(page, size).subscribe({
+    this.questionService.getAllActiveQuestions(page, size).subscribe({
       next: (data) => {
         console.log("get all questions ", data);
         

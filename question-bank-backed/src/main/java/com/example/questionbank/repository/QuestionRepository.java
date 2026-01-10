@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSpecificationExecutor<Question> {
@@ -59,4 +60,22 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
             "q.questionText LIKE %:searchText% AND " +
             "q.isActive = true")
     Page<Question> searchActiveQuestions(@Param("searchText") String searchText, Pageable pageable);
+
+    // Add this method to fetch questions with complete hierarchy
+    @Query("SELECT q FROM Question q " +
+            "JOIN FETCH q.chapter c " +
+            "JOIN FETCH c.subject s " +
+            "JOIN FETCH s.classEntity cl " +
+            "WHERE q.isActive = true " +
+            "ORDER BY q.id")
+    List<Question> findByIsActiveTrueWithCompleteHierarchy();
+
+    // You can also add specific methods if needed
+    @Query("SELECT q FROM Question q " +
+            "JOIN FETCH q.chapter c " +
+            "JOIN FETCH c.subject s " +
+            "JOIN FETCH s.classEntity cl " +
+            "WHERE q.id = :id")
+    Optional<Question> findByIdWithCompleteHierarchy(@Param("id") Long id);
+
 }

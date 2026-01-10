@@ -46,6 +46,16 @@ export class QuestionService {
     return this.http.get<Question[]>(this.apiUrl, { params });
   }
 
+  // Get all Questions with pagination
+  getAllActiveQuestions(page: number, size: number): Observable<Question[]> {
+    const url = `${this.apiUrl}/active`;
+    const params = new HttpParams()
+       //.set('page', page.toString())
+       //.set('size', size.toString());
+    return this.http.get<Question[]>(url, { params });
+
+  }
+
   // Search Questions by text with pagination
   searchQuestions(questionText: string, page: number, size: number): Observable<Question[]> {
     const params = new HttpParams()

@@ -3,6 +3,7 @@ package com.example.questionbank.mapper;
 import com.example.questionbank.dto.request.CreateChapterRequestDTO;
 import com.example.questionbank.dto.request.UpdateChapterRequestDTO;
 import com.example.questionbank.dto.response.ChapterResponseDTO;
+import com.example.questionbank.dto.response.ChapterSummaryDTO;
 import com.example.questionbank.model.Chapter;
 import com.example.questionbank.model.Subject;
 import org.mapstruct.Mapper;
@@ -22,6 +23,9 @@ public interface ChapterMapper {
     ChapterResponseDTO toResponseDTO(Chapter entity);
 
     List<ChapterResponseDTO> toResponseDTOList(List<Chapter> entities);
+
+    @Mapping(target = "subjectInfo", source = "subject")
+    ChapterSummaryDTO toSummaryDTO(Chapter entity);
 
     @Mapping(target = "subject", source = "subjectId")
     void updateEntityFromDTO(UpdateChapterRequestDTO dto, @MappingTarget Chapter entity);

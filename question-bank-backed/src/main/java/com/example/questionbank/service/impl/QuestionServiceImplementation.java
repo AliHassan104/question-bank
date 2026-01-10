@@ -228,12 +228,22 @@ public class QuestionServiceImplementation implements QuestionService {
         return questionMapper.toResponseDTOListWithoutOptions(questions);
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<QuestionResponseDTO> getAllActiveQuestions() {
+//        log.debug("Fetching all active questions");
+//
+//        List<Question> questions = questionRepository.findByIsActiveTrue();
+//        return questionMapper.toResponseDTOListWithoutOptions(questions);
+//    }
+
     @Override
     @Transactional(readOnly = true)
     public List<QuestionResponseDTO> getAllActiveQuestions() {
-        log.debug("Fetching all active questions");
+        log.debug("Fetching all active questions with complete hierarchy");
 
-        List<Question> questions = questionRepository.findByIsActiveTrue();
+        // Use the new method that fetches complete hierarchy
+        List<Question> questions = questionRepository.findByIsActiveTrueWithCompleteHierarchy();
         return questionMapper.toResponseDTOListWithoutOptions(questions);
     }
 

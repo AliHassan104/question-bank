@@ -60,8 +60,9 @@
                         <thead class="text-primary">
                             <tr>
                                 <th>S. No</th>
-                                <th>Question</th>
                                 <th>Chapter</th>
+                                <th>Question</th>
+                                <th>Section Type</th>
                                 <th class="text-right">Action</th>
                             </tr>
                         </thead>
@@ -89,18 +90,20 @@
                                         </ng-template>
                                     </div>
                                 </td>
-
+                                
+                                
                                 <td>
                                     <div class="form-group mb-0">
-                                        {{ question.chapterInfo.name }}
-                                        <!--  - {{ question.chapterInfo.subjectInfo.name }} -
-                                        {{ question.chapterInfo.subjectInfo.classEntity?.name ||
-                                        question.chapterInfo.subjectInfo.classInfo?.name }} -->
+                                        {{ question.sectionType }}
                                     </div>
                                 </td>
-                                <!-- <td>{{ chapter?.subjectInfo?.name || 'No Subject' }}</td>
-                                <td>{{ chapter?.subjectInfo?.classInfo?.name || 'No Class' }}</td> -->
-
+                                
+                                <td>
+                                    <div class="form-group mb-0">
+                                        {{ question.chapterInfo.name }} - {{ question.chapterInfo.subjectInfo.name }} -
+                                         {{ question.chapterInfo.subjectInfo.classEntity?.name || question.chapterInfo.subjectInfo.classInfo?.name }}
+                                    </div>
+                                </td>
                                 <td class="text-right">
                                     <button (click)="addQuestionToPaper(question)" class="btn btn-sm mb-1"
                                         [class.btn-success]="question.isAddedToPaper"

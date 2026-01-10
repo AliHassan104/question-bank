@@ -34,7 +34,7 @@ public class Chapter extends BaseEntity {
     @Builder.Default
     private Boolean isActive = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 

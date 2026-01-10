@@ -33,14 +33,15 @@ public interface QuestionMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDTO(UpdateQuestionRequestDTO dto, @MappingTarget Question entity);
 
-    // Convert Entity to QuestionResponseDTO without options (for performance)
-    @Named("toResponseDTOWithoutOptions")
-    @Mapping(target = "chapterInfo", source = "chapter")
-    QuestionResponseDTO toResponseDTOWithoutOptions(Question entity);
-
     // Convert List of Entities to List of ResponseDTOs without options
     @IterableMapping(qualifiedByName = "toResponseDTOWithoutOptions")
     List<QuestionResponseDTO> toResponseDTOListWithoutOptions(List<Question> entities);
+
+    // Convert Entity to QuestionResponseDTO without options (for performance)
+    @Named("toResponseDTOWithoutOptions")
+    @Mapping(target = "chapterInfo", source = "chapter")
+    @Mapping(target = "mcqOptions", ignore = true) // Add this line to explicitly ignore mcqOptions
+    QuestionResponseDTO toResponseDTOWithoutOptions(Question entity);
 
     // Custom mapping method to convert Long chapterId to Chapter
     default Chapter mapChapterId(Long chapterId) {

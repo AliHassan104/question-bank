@@ -32,7 +32,7 @@ public class Subject extends BaseEntity {
     @Builder.Default
     private Boolean isActive = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "class_id", nullable = false)
     private ClassEntity classEntity;
 
