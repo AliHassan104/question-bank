@@ -16,6 +16,7 @@ public interface QuestionMapper {
     @Mapping(target = "chapter", source = "chapterId")
     @Mapping(target = "isAddedToPaper", constant = "false")
     @Mapping(target = "transientOptions", ignore = true)
+    @Mapping(target = "mcqOptions", ignore = true)
     Question toEntity(CreateQuestionRequestDTO dto);
 
     // Convert Entity to QuestionResponseDTO

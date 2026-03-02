@@ -78,28 +78,32 @@ export class AddQuestionComponent implements OnInit, OnChanges {
       option2: [''],
       option3: [''],
       option4: [''],
+      correctOption: [1, Validators.required]
     });
   }
 
   private setupFormSubscriptions(): void {
     this.questionForm.get('sectionType')?.valueChanges.subscribe(value => {
       this.isMCQSelected = value === 'MCQ';
-      
+
       // Add validation for MCQ options when MCQ is selected
       if (this.isMCQSelected) {
         this.questionForm.get('option1')?.setValidators([Validators.required]);
         this.questionForm.get('option2')?.setValidators([Validators.required]);
+        this.questionForm.get('correctOption')?.setValidators([Validators.required]);
       } else {
         this.questionForm.get('option1')?.clearValidators();
         this.questionForm.get('option2')?.clearValidators();
         this.questionForm.get('option3')?.clearValidators();
         this.questionForm.get('option4')?.clearValidators();
+        this.questionForm.get('correctOption')?.clearValidators();
       }
-      
+
       this.questionForm.get('option1')?.updateValueAndValidity();
       this.questionForm.get('option2')?.updateValueAndValidity();
       this.questionForm.get('option3')?.updateValueAndValidity();
       this.questionForm.get('option4')?.updateValueAndValidity();
+      this.questionForm.get('correctOption')?.updateValueAndValidity();
     });
   }
 
@@ -112,7 +116,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
         class: this.editingQuestion.chapterInfo?.subjectInfo?.classInfo?.id || this.editingQuestion.chapterInfo?.subjectInfo?.classInfo?.id,
         subject: this.editingQuestion.chapterInfo?.subjectInfo?.id
       });
-      
+
       // Set the section type selection
       this.isMCQSelected = this.editingQuestion.sectionType === 'MCQ';
     }
@@ -122,9 +126,9 @@ export class AddQuestionComponent implements OnInit, OnChanges {
   shouldShowChapterError(): boolean {
     const chapterControl = this.questionForm.get('chapter');
     if (!chapterControl) return false;
-    
-    return (this.submitted && chapterControl.invalid) || 
-           (chapterControl.touched && chapterControl.invalid && !chapterControl.value);
+
+    return (this.submitted && chapterControl.invalid) ||
+      (chapterControl.touched && chapterControl.invalid && !chapterControl.value);
   }
 
   // Added: Getter for form controls
@@ -133,6 +137,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
+    debugger;
     this.submitted = true;
     this.clearMessages();
 
@@ -144,19 +149,31 @@ export class AddQuestionComponent implements OnInit, OnChanges {
 
     if (this.questionForm.valid) {
       this.loading = true;
-      
+
       // Create the request DTO that matches backend expectations
-      const questionRequest = {
+      const questionRequest: any = {
         questionText: this.questionForm.value.name.trim(),
         chapterId: parseInt(this.questionForm.value.chapter),
         sectionType: this.questionForm.value.sectionType,
-        questionType: 'SINGLE_CHOICE', // Default question type
-        difficultyLevel: 'MEDIUM', // Default difficulty
-        marks: 1.0, // Default marks
-        negativeMarks: 0.0,
-        isActive: true,
-        isAddedToPaper: false
+        questionType: 'SINGLE_CHOICE',
+        difficultyLevel: 'MEDIUM',
+        marks: 1.0,
+        negativeMarks: 0.0
       };
+
+      // ⭐ ADD THIS BLOCK
+      if (this.questionForm.value.sectionType === 'MCQ') {
+        const correctOption = this.questionForm.value.correctOption;
+
+        questionRequest.mcqOptions = [
+          { optionText: this.questionForm.value.option1, isCorrect: correctOption === 'A' },
+          { optionText: this.questionForm.value.option2, isCorrect: correctOption === 'B' },
+          { optionText: this.questionForm.value.option3, isCorrect: correctOption === 'C' },
+          { optionText: this.questionForm.value.option4, isCorrect: correctOption === 'D' }
+        ];
+      }
+
+
 
       if (this.editingQuestion) {
         this.updateQuestionEntity(this.editingQuestion.id, questionRequest);
@@ -178,14 +195,14 @@ export class AddQuestionComponent implements OnInit, OnChanges {
         this.submitted = false;
         this.successMessage = 'Question created successfully!';
         this.questionUpdated.emit();
-        
+
         // Create MCQ options if this is an MCQ question
-        if (data.sectionType === 'MCQ') {
-          this.createMCQOptionsForQuestion(data.id);
-        } else {
-          this.questionForm.reset();
-        }
-        
+        // if (data.sectionType === 'MCQ') {
+        //   this.createMCQOptionsForQuestion(data.id);
+        // } else {
+        this.questionForm.reset();
+        // }
+
         // Clear success message after 3 seconds
         setTimeout(() => {
           this.successMessage = '';
@@ -209,7 +226,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
         this.questionUpdated.emit();
         this.resetEditing.emit();
         this.questionForm.reset();
-        
+
         // Clear success message after 3 seconds
         setTimeout(() => {
           this.successMessage = '';
@@ -225,7 +242,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
 
   private createMCQOptionsForQuestion(questionId: number): void {
     const mcqOptions: any[] = [];
-    
+
     // Only add non-empty options
     if (this.questionForm.value.option1?.trim()) {
       mcqOptions.push({
@@ -236,7 +253,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
         isActive: true
       });
     }
-    
+
     if (this.questionForm.value.option2?.trim()) {
       mcqOptions.push({
         optionText: this.questionForm.value.option2.trim(),
@@ -246,7 +263,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
         isActive: true
       });
     }
-    
+
     if (this.questionForm.value.option3?.trim()) {
       mcqOptions.push({
         optionText: this.questionForm.value.option3.trim(),
@@ -256,7 +273,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
         isActive: true
       });
     }
-    
+
     if (this.questionForm.value.option4?.trim()) {
       mcqOptions.push({
         optionText: this.questionForm.value.option4.trim(),
@@ -329,7 +346,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
   getFilteredSubject(classId: number): void {
     this.loadingSubjects = true;
     this.subjects = [];
-    
+
     this.subjectService.getSubjectsByClass(classId).subscribe({
       next: (data) => {
         this.subjects = data;
@@ -347,7 +364,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
   getFilteredChapter(subjectId: number, classId?: number): void {
     this.loadingChapters = true;
     this.chapters = [];
-    
+
     this.chapterService.filterChapters(subjectId, classId).subscribe({
       next: (data) => {
         this.chapters = data;
@@ -364,10 +381,10 @@ export class AddQuestionComponent implements OnInit, OnChanges {
 
   onSubjectChange(value: string): void {
     console.log('Subject changed:', value);
-    
+
     // Clear chapter selection when subject changes
     this.questionForm.patchValue({ chapter: '' });
-    
+
     if (value === 'all' || value === '') {
       this.getAllChapters();
     } else {
@@ -377,10 +394,10 @@ export class AddQuestionComponent implements OnInit, OnChanges {
 
   onClassChange(value: string): void {
     console.log('Class changed:', value);
-    
+
     // Clear subject and chapter selections when class changes
     this.questionForm.patchValue({ subject: '', chapter: '' });
-    
+
     if (value === 'all' || value === '') {
       this.getAllSubjects();
     } else {
@@ -391,7 +408,7 @@ export class AddQuestionComponent implements OnInit, OnChanges {
   // Added: Error handling method
   private handleError(error: HttpErrorResponse): void {
     console.error('HTTP Error:', error);
-    
+
     if (error.status === 409) {
       this.errorMessage = error.error?.message || 'A question with similar content already exists.';
     } else if (error.status === 400) {

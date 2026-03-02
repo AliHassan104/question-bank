@@ -87,13 +87,29 @@ public class Question extends BaseEntity {
     @NotNull(message = "Chapter is required")
     private Chapter chapter;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "question",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
+    )
     @Builder.Default
     private Set<MCQOption> mcqOptions = new HashSet<>();
+
 
     // Transient field for report generation
     @Transient
     private List<MCQOption> transientOptions;
+
+    public void addMcqOption(MCQOption option) {
+        mcqOptions.add(option);
+        option.setQuestion(this);
+    }
+
+    public void addMcqOptions(Set<MCQOption> options) {
+        options.forEach(this::addMcqOption);
+    }
+
 
     // Helper methods
     public Integer getMcqOptionCount() {

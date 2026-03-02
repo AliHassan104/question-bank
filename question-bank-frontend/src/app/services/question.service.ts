@@ -17,6 +17,7 @@ export class QuestionService {
 
   // Create a new Question
   createQuestion(question: Question): Observable<Question> {
+    debugger;
     return this.http.post<Question>(this.apiUrl, question);
   }
 

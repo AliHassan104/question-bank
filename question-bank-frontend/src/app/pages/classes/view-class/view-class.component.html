@@ -60,20 +60,20 @@
                     <table class="table table-hover">
                         <thead class="text-primary">
                             <th>S.No</th>
-                            <th>ID</th>
+                            <!-- <th>ID</th> -->
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
-                            <th>Created</th>
+                            <!-- <th>Created</th> -->
                             <th class="text-right">Actions</th>
                         </thead>
                         <tbody>
                             <tr *ngFor="let classItem of classes; let i = index" 
                                 [class.table-warning]="editingClass?.id === classItem.id">
                                 <td>{{ i + 1 }}</td>
-                                <td>
+                                <!-- <td>
                                     <small class="text-muted">#{{ classItem.id }}</small>
-                                </td>
+                                </td> -->
                                 <td>
                                     <strong>{{ classItem.name }}</strong>
                                     <span *ngIf="editingClass?.id === classItem.id" class="badge badge-warning ml-2">
@@ -95,11 +95,11 @@
                                         {{ classItem.isActive ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <small class="text-muted">
                                         {{ classItem.createdAt | date:'short' }}
                                     </small>
-                                </td>
+                                </td> -->
                                 <td class="text-right">
                                     <div class="btn-group" role="group">
                                         <button 

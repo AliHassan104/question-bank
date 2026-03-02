@@ -1,0 +1,9 @@
+1) Symbols in papers like mathematical chemical equations
+
+2) multilingual papers
+
+3) MCQs options size
+
+4) Login page security need to be implemented
+
+D:\Workspace\Projects\question-bank\question-bank-backed\pom.xml

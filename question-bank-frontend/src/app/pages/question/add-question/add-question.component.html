@@ -106,6 +106,26 @@
                             </div>
                         </div>
 
+                        <!-- Correct Option for MCQ -->
+                        <div *ngIf="isMCQSelected" class="form-group">
+                            <label for="correctOption">Correct Option <span class="text-danger">*</span></label>
+                            <select 
+                                id="correctOption" 
+                                formControlName="correctOption" 
+                                class="form-control"
+                                [class.is-invalid]="(f.correctOption.invalid && f.correctOption.touched) || (submitted && f.correctOption.invalid)">
+                                <option value="" disabled>Select correct option</option>
+                                <option value="A" [disabled]="!questionForm.get('option1')?.value">Option A</option>
+                                <option value="B" [disabled]="!questionForm.get('option2')?.value">Option B</option>
+                                <option value="C" [disabled]="!questionForm.get('option3')?.value">Option C</option>
+                                <option value="D" [disabled]="!questionForm.get('option4')?.value">Option D</option>
+                            </select>
+                            <div *ngIf="(f.correctOption.invalid && f.correctOption.touched) || (submitted && f.correctOption.invalid)" 
+                                 class="invalid-feedback">
+                                Correct option is required for MCQ
+                            </div>
+                        </div>
+
                         <!-- Class Selection -->
                         <div class="form-group">
                             <label for="classDropdown">Select Class</label>

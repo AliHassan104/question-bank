@@ -5,8 +5,10 @@ import com.example.questionbank.dto.request.UpdateQuestionRequestDTO;
 import com.example.questionbank.dto.response.QuestionResponseDTO;
 import com.example.questionbank.exception.RecordNotFoundException;
 import com.example.questionbank.exception.ValidationException;
+import com.example.questionbank.mapper.MCQOptionMapper;
 import com.example.questionbank.mapper.QuestionMapper;
 import com.example.questionbank.model.Chapter;
+import com.example.questionbank.model.MCQOption;
 import com.example.questionbank.model.Question;
 import com.example.questionbank.model.enums.SectionType;
 import com.example.questionbank.model.enums.QuestionType;
@@ -43,6 +45,9 @@ public class QuestionServiceImplementation implements QuestionService {
     private QuestionMapper questionMapper;
 
     @Autowired
+    private MCQOptionMapper mcqOptionMapper;
+
+    @Autowired
     private MCQOptionService mcqOptionService;
 
     @Override
@@ -58,12 +63,16 @@ public class QuestionServiceImplementation implements QuestionService {
         try {
             Question question = questionMapper.toEntity(dto);
             question.setChapter(chapter);
-            Question savedQuestion = questionRepository.save(question);
 
-            // Create MCQ options if provided
             if (dto.getMcqOptions() != null && !dto.getMcqOptions().isEmpty()) {
-                mcqOptionService.createOptionsForQuestion(savedQuestion.getId(), dto.getMcqOptions());
+                dto.getMcqOptions().forEach(optDto -> {
+                    MCQOption option = mcqOptionMapper.toEntity(optDto);
+                    option.setQuestion(question);              // ✅
+                    question.getMcqOptions().add(option);      // ✅
+                });
             }
+
+            Question savedQuestion = questionRepository.save(question);
 
             log.info("Successfully created question with ID: {}", savedQuestion.getId());
             return getQuestionByIdWithOptions(savedQuestion.getId());

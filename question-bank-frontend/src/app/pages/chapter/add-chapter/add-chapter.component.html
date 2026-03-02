@@ -17,7 +17,7 @@
                             <label for="dropdown">Select Class</label>
                             <select #classDropdown (change)="onClassChange(classDropdown.value)" id="dropdown"
                                 formControlName="class" class="form-control">
-                                <option value="all">All</option>
+                                <option value="" selected>All</option>
                                 <option *ngFor="let classInfo of classes" value="{{ classInfo.id }}">
                                     {{ classInfo?.name || 'Unnamed Class' }}
                                 </option>
